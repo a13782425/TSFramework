@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using TSFrame.MVVM;
 using UnityEngine.UI;
 using UnityEngine;
-using TSFrame.UI.Base;
 
 namespace TSFrame.UI
 {
-    public sealed class UIText : UIControl<Text>
+    public sealed class UIText : UIElement<Text>,IBindingElement
     {
         public UIText(Text control) : base(control)
         {
@@ -20,17 +19,20 @@ namespace TSFrame.UI
         /// </summary>
         public string text
         {
-            get { return Control?.text; }
-            set { Control.text = value; }
-        }
-        public override void OneWayToSource<TField>(BindableProperty<TField> property)
-        {
-            throw new Exception($"Text不能反向绑定ViewModel参数");
+            get { return Element?.text; }
+            set { Element.text = value; }
         }
 
-        public override void OneWay<TField>(BindableProperty<TField> property)
+        public event ValueChangedEvent ValueChanged;
+
+        public override void Binding<TField>(BindableProperty<TField> property)
         {
-            property.OnValueChanged += (a, b) => { this.text = property.Value.ToString(); };
+            Debug.LogError("Text组件不支持反向绑定ViewModel");
+        }
+
+        public override void SetValue(object value)
+        {
+            text = value.ToString();
         }
     }
 }

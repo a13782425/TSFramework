@@ -6,89 +6,72 @@ using System.Threading.Tasks;
 using TSFrame.MVVM;
 using UnityEngine.UI;
 using UnityEngine;
-using TSFrame.UI.Base;
+using static UnityEngine.UI.InputField;
 
 namespace TSFrame.UI
 {
     /// <summary>
     /// 框架内输入框
     /// </summary>
-    public sealed class UIInputField : UIControl<InputField>
+    public sealed class UIInputField : UIElement<InputField>, IBindingElement
     {
-        #region 构造
+        public delegate void OnValueChanged(string value);
 
-        private static Type _stringType = typeof(string);
+        #region 构造
         public UIInputField(InputField control) : base(control)
         {
-
+            _supportType = new Type[]
+            {
+                typeof(string),
+                typeof(int),
+                typeof(float),
+                typeof(double),
+                typeof(uint)
+            };
+            this.Element.onValueChanged.AddListener(tempValueChange);
         }
 
         #endregion
+
+        #region 组件变量
 
         /// <summary>
         /// 内容
         /// </summary>
         public string text
         {
-            get { return Control?.text; }
-            set { Control.text = value; }
+            get { return Element?.text; }
+            set { Element.text = value; }
         }
 
-        public override void OneWayToSource<TField>(BindableProperty<TField> property)
+        public event ValueChangedEvent ValueChanged;
+
+        private OnValueChanged _onValueChanged;
+        public OnValueChanged onValueChanged
         {
-            if (_stringType != typeof(TField))
+            get { return _onValueChanged; }
+            set { _onValueChanged = value; }
+        }
+        #endregion
+
+        public override void SetValue(object value)
+        {
+            string str = value.ToString();
+            if (str != text)
             {
-                Debug.LogError("InputField 只能反向绑定String的ViewModel的变量");
-                return;
+                text = str;
             }
-            OneWayToSource(property as BindableProperty<string>);
         }
 
-        public override void OneWay<TField>(BindableProperty<TField> property)
+        private void tempValueChange(string value)
         {
-            property.OnValueChanged += (a, b) =>
-            {
-                string str = property.Value.ToString();
-                if (this.text != str)
-                {
-                    this.text = property.Value.ToString();
-                }
-            };
+            onValueChanged?.Invoke(value);
+            ValueChanged(value);
         }
-
-        public override void TwoWay<TField>(BindableProperty<TField> property)
-        {
-            OneWayToSource(property);
-            OneWay(property);
-        }
-
-
-        private void OneWayToSource(BindableProperty<string> property)
-        {
-            this.Control.onValueChanged.AddListener((a) => { property.Value = a; });
-        }
-
-
-
-
-        //public override void OneWayToSource(Action<object> action)
-        //{
-        //    _control.onValueChanged.AddListener((str) =>
-        //    {
-        //        action?.Invoke(str);
-        //    });
-        //}
-
-
-        //public void OneWay(BindableProperty<string> bindableProperty)
-        //{
-        //    bindableProperty.OnValueChanged = (a, b) => { _control.text = b; };
-        //}
-
 
         public override void Freed()
         {
-            this.Control.onValueChanged.RemoveAllListeners();
+            this.Element.onValueChanged.RemoveAllListeners();
         }
     }
 }
