@@ -1,0 +1,32 @@
+﻿//------------------------------------------------------------------------------------------------------------
+//-----------------------------------generate file {GeneratedTime}----------------------------------------
+//------------------------------------------------------------------------------------------------------------
+using TSFrame.UI;
+using UnityEngine;
+using UnityEngine.UI;
+
+public partial class {ClassName} : UIPanel
+{
+    public override string UIPath => "{UIPath}";
+
+	    #region variable
+
+{Variable}
+    #endregion
+
+    //private GameObject _gameobj;
+    //private Transform _tran;
+    //private Button raw_uibutton;
+    //private UIButton uibutton;
+
+
+    protected override void InitializeElement()
+    {
+        //初始化组件
+{BindComponent}
+        //_gameobj = this.transform.Find("").gameObject;
+        //_tran = this.transform.Find("");
+        //raw_uibutton = this.transform.Find("").GetComponent<Button>();
+        //uibutton = new UIButton(raw_uibutton);
+    }
+}

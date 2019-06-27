@@ -42,20 +42,20 @@ namespace TSFrame.Test
     //{
     //    public override string UIPath => "";
     //}
-    public class p : IBindingElement
-    {
-        public event ValueChangedEvent ValueChanged;
+    //public class p : IBindingElement
+    //{
+    //    public event ValueChangedEvent ValueChanged;
 
-        public void a()
-        {
-           // PropertyChanged.Invoke("a");
-        }
+    //    public void a()
+    //    {
+    //       // PropertyChanged.Invoke("a");
+    //    }
 
-        public void SetValue(object value)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public void SetValue(object value)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
     public partial class Panel : UIPanel
     {
         public override string UIPath => "";

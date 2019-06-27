@@ -17,22 +17,37 @@ namespace TSFrame.MVVM
         /// <summary>
         /// 当前绑定的数据
         /// </summary>
-        public object SourceData { get => _sourceData; set { _sourceData = value; SourceDataChange(value); } }
+        public object SourceData { get => _sourceData; set { SourceDataChange(value); } }
 
         /// <summary>
         /// 绑定数据对应绑定模式缓存
         /// </summary>
-        private Dictionary<string, BindPropertyData> _bindPropertyDic = null;
+        private readonly Dictionary<string, BindPropertyData> _bindPropertyDic = null;
 
-        private Dictionary<IBindingElement, BindElementData> _bindElementDic = null;
+        //private Dictionary<IBindingElement, BindElementData> _bindElementDic = null;
+        private readonly Dictionary<int, BindElementData> _bindElementDic = null;
 
+        private readonly UIView _view = null;
         #endregion
 
-        public Binding()
+        //public Binding()
+        //{
+        //    _bindPropertyDic = new Dictionary<string, BindPropertyData>();
+        //    _bindElementDic = new Dictionary<IBindingElement, BindElementData>();
+        //}
+
+        public Binding(UIView view)
         {
+            if (view == null)
+            {
+                GameApp.Instance.LogError("Binding 必须依托于一个view");
+                return;
+            }
             _bindPropertyDic = new Dictionary<string, BindPropertyData>();
-            _bindElementDic = new Dictionary<IBindingElement, BindElementData>();
+            _bindElementDic = new Dictionary<int, BindElementData>();
+            _view = view;
         }
+
         /// <summary>
         /// 绑定
         /// </summary>
@@ -77,6 +92,11 @@ namespace TSFrame.MVVM
                 GameApp.Instance.LogError("绑定的属性名称为空");
                 return;
             }
+            if (!_view.CheckElementBelongView(element))
+            {
+                GameApp.Instance.LogError("UI元素不是当前视图");
+                return;
+            }
             switch (bindingMode)
             {
                 case BindingMode.OneWayToSource:
@@ -96,11 +116,11 @@ namespace TSFrame.MVVM
 
         private void BindElement(string fieldName, IBindingElement element, BindingMode bindingMode)
         {
-            if (!_bindElementDic.ContainsKey(element))
+            if (!_bindElementDic.ContainsKey(element.InstanceId))
             {
-                _bindElementDic.Add(element, new BindElementData(element));
+                _bindElementDic.Add(element.InstanceId, new BindElementData(element));
             }
-            BindElementData bindData = _bindElementDic[element];
+            BindElementData bindData = _bindElementDic[element.InstanceId];
             bindData.Add(fieldName, bindingMode);
         }
 
@@ -158,9 +178,9 @@ namespace TSFrame.MVVM
 
         private void UnbindElement(string fieldName, IBindingElement element, BindingMode bindingMode)
         {
-            if (_bindElementDic.ContainsKey(element))
+            if (_bindElementDic.ContainsKey(element.InstanceId))
             {
-                _bindElementDic[element].Unbind(fieldName, bindingMode);
+                _bindElementDic[element.InstanceId].Unbind(fieldName, bindingMode);
             }
         }
         /// <summary>
@@ -172,7 +192,7 @@ namespace TSFrame.MVVM
             {
                 item.Value.UnbindAll();
             }
-            foreach (KeyValuePair<IBindingElement, BindElementData> item in _bindElementDic)
+            foreach (KeyValuePair<int, BindElementData> item in _bindElementDic)
             {
                 item.Value.UnbindAll();
             }
@@ -183,6 +203,11 @@ namespace TSFrame.MVVM
         /// </summary>
         private void SourceDataChange(object data)
         {
+            if (data == null)
+            {
+                GameApp.Instance.LogError("绑定的数据为空！");
+                return;
+            }
             Type type = data.GetType();
             List<FieldInfo> fieldInfos = BindingCacheData.GetFieldInfos(type);
             foreach (var item in fieldInfos)
@@ -195,7 +220,7 @@ namespace TSFrame.MVVM
                     {
                         bindData.Reset();
                         bindData.BindProp(bindableProperty);
-                        foreach (KeyValuePair<IBindingElement, BindElementData> temp in _bindElementDic)
+                        foreach (KeyValuePair<int, BindElementData> temp in _bindElementDic)
                         {
                             temp.Value.SetProp(bindableProperty);
                         }
@@ -203,11 +228,6 @@ namespace TSFrame.MVVM
                 }
             }
             _sourceData = data;
-            foreach (KeyValuePair<IBindingElement, BindElementData> temp in _bindElementDic)
-            {
-                temp.Value.Reset();
-                temp.Value.BindElement();
-            }
             foreach (KeyValuePair<string, BindPropertyData> item in _bindPropertyDic)
             {
                 item.Value.SetValue(BindingMode.OnTime);
@@ -223,10 +243,12 @@ namespace TSFrame.MVVM
             internal BindPropertyData(string fieldName)
             {
                 FieldName = fieldName;
-                _bindingElementDic = new Dictionary<BindingMode, List<IBindingElement>>();
-                _bindingElementDic.Add(BindingMode.OneWay, new List<IBindingElement>());
-                _bindingElementDic.Add(BindingMode.OnTime, new List<IBindingElement>());
-                _bindingElementDic.Add(BindingMode.TwoWay, new List<IBindingElement>());
+                _bindingElementDic = new Dictionary<BindingMode, List<IBindingElement>>
+                {
+                    { BindingMode.OneWay, new List<IBindingElement>() },
+                    { BindingMode.OnTime, new List<IBindingElement>() },
+                    { BindingMode.TwoWay, new List<IBindingElement>() }
+                };
             }
             internal void Add(IBindingElement bindingElement, BindingMode bindingMode)
             {
@@ -240,26 +262,7 @@ namespace TSFrame.MVVM
             {
                 return this._bindingElementDic[bindingMode].Remove(bindingElement);
             }
-            /// <summary>
-            /// 取消绑定
-            /// </summary>
-            /// <param name="element"></param>
-            /// <param name="bindingMode"></param>
-            internal void Unbind(IBindingElement element, BindingMode bindingMode)
-            {
-                Remove(element, bindingMode);
-            }
-            /// <summary>
-            /// 重置绑定
-            /// </summary>
-            internal void Reset()
-            {
-                if (_bindableProperty != null)
-                {
-                    _bindableProperty.Unbind(onValueChanged);
-                }
-                _bindableProperty = null;
-            }
+
             public override string ToString()
             {
                 return $"{FieldName}:{_bindingElementDic.Count}";
@@ -286,11 +289,10 @@ namespace TSFrame.MVVM
             internal void BindProp(IBindableProperty value)
             {
                 _bindableProperty = value;
-                _bindableProperty.Bind(onValueChanged);
+                _bindableProperty.Bind(OnValueChanged);
             }
 
-
-            private void onValueChanged(object o)
+            private void OnValueChanged(object o)
             {
                 SetValue(BindingMode.OneWay, o);
                 SetValue(BindingMode.TwoWay, o);
@@ -319,7 +321,26 @@ namespace TSFrame.MVVM
                     }
                 }
             }
-
+            /// <summary>
+            /// 重置绑定
+            /// </summary>
+            internal void Reset()
+            {
+                if (_bindableProperty != null)
+                {
+                    _bindableProperty.Unbind(OnValueChanged);
+                }
+                _bindableProperty = null;
+            }
+            /// <summary>
+            /// 取消绑定
+            /// </summary>
+            /// <param name="element"></param>
+            /// <param name="bindingMode"></param>
+            internal void Unbind(IBindingElement element, BindingMode bindingMode)
+            {
+                Remove(element, bindingMode);
+            }
             /// <summary>
             /// 解绑全部
             /// </summary>
@@ -340,9 +361,12 @@ namespace TSFrame.MVVM
             internal BindElementData(IBindingElement bindingElement)
             {
                 BindingElement = bindingElement;
-                _bindingProertyDic = new Dictionary<BindingMode, Dictionary<string, IBindableProperty>>();
-                _bindingProertyDic.Add(BindingMode.OneWayToSource, new Dictionary<string, IBindableProperty>());
-                _bindingProertyDic.Add(BindingMode.TwoWay, new Dictionary<string, IBindableProperty>());
+                _bindingProertyDic = new Dictionary<BindingMode, Dictionary<string, IBindableProperty>>
+                {
+                    { BindingMode.OneWayToSource, new Dictionary<string, IBindableProperty>() },
+                    { BindingMode.TwoWay, new Dictionary<string, IBindableProperty>() }
+                };
+                BindingElement.ValueChanged += BindingElement_ValueChanged;
             }
 
             public override bool Equals(object obj)
@@ -383,10 +407,7 @@ namespace TSFrame.MVVM
                 }
                 return false;
             }
-            internal void Unbind(string propName, BindingMode bindingMode)
-            {
-                Remove(propName, bindingMode);
-            }
+
             /// <summary>
             /// 设置属性
             /// </summary>
@@ -408,15 +429,15 @@ namespace TSFrame.MVVM
                 }
             }
 
-            /// <summary>
-            /// 绑定组件
-            /// </summary>
-            internal void BindElement()
-            {
-                BindingElement.ValueChanged += bindingElement_ValueChanged;
-            }
+            ///// <summary>
+            ///// 绑定组件
+            ///// </summary>
+            //internal void BindElement()
+            //{
 
-            private void bindingElement_ValueChanged(object value)
+            //}
+
+            private void BindingElement_ValueChanged(object value)
             {
                 SetValue(BindingMode.OneWayToSource, value);
                 SetValue(BindingMode.TwoWay, value);
@@ -442,7 +463,11 @@ namespace TSFrame.MVVM
             /// </summary>
             internal void Reset()
             {
-                BindingElement.ValueChanged -= bindingElement_ValueChanged;
+                BindingElement.ValueChanged -= BindingElement_ValueChanged;
+            }
+            internal void Unbind(string propName, BindingMode bindingMode)
+            {
+                Remove(propName, bindingMode);
             }
             /// <summary>
             /// 解绑全部

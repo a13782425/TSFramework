@@ -1,0 +1,28 @@
+﻿; Global
+[Global]
+Placeholder=0
+
+; UI
+[UI]
+PanelPath=
+ItemPath=
+
+[UIScript]
+PanelScriptPath=
+ItemScriptPath=
+
+[UIExport]
+btn_=Button
+img_=Image
+txt_=Text
+txtp_=TextPlus
+inp_=InputField
+srect_=ScrollRect
+sbar_=Scrollbar
+tog_= Toggle
+sli_=Slider
+drop_= Dropdown
+can_= Canvas
+go_=GameObject
+tran_=Transform
+rtran_=RectTransform

@@ -10,13 +10,30 @@ namespace TSFrame.UI
 {
     public delegate void ValueChangedEvent(object value);
 
-    public interface IBindingElement
+    public interface IElement
     {
-        //
-        // 摘要:
-        //     Occurs when a property value changes.
-        event ValueChangedEvent ValueChanged;
+        /// <summary>
+        /// 实例ID
+        /// </summary>
+        int InstanceId { get; }
+    }
 
+    public interface IBindingElement : IElement
+    {
+        /// <summary>
+        /// 自己变化调用其他
+        /// </summary>
+        event ValueChangedEvent ValueChanged;
+        /// <summary>
+        /// 别人变化调用自身
+        /// </summary>
+        /// <param name="value"></param>
         void SetValue(object value);
+
+        ///// <summary>
+        ///// 检测绑定条件
+        ///// </summary>
+        ///// <returns></returns>
+        //bool DetectBindCondition();
     }
 }

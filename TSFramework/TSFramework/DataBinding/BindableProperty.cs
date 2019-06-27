@@ -13,8 +13,6 @@ namespace TSFrame.MVVM
 
         private Action<object> _onObjValueChanged;
 
-        //private List<BindableData> _bindableDatasList;
-
         private T _value;
         public T Value
         {
@@ -46,6 +44,29 @@ namespace TSFrame.MVVM
             this.name = name;
         }
 
+        public void Bind(Action<T, T> valueChanged)
+        {
+            _onValueChanged += valueChanged;
+        }
+
+        public void Unbinding(Action<T, T> valueChanged)
+        {
+            _onValueChanged -= valueChanged;
+        }
+
+
+        public override string ToString()
+        {
+            return (Value != null ? Value.ToString() : "null");
+        }
+
+        public void Freed()
+        {
+            _onValueChanged = null;
+        }
+
+        #region private
+
         private void ValueChanged(T oldValue, T newValue)
         {
             _onObjValueChanged?.Invoke(_value);
@@ -60,17 +81,7 @@ namespace TSFrame.MVVM
         {
             _onObjValueChanged -= valueChanged;
         }
-        public void Bind(Action<T, T> valueChanged)
-        {
-            _onValueChanged += valueChanged;
-        }
-
-        public void Unbinding(Action<T, T> valueChanged)
-        {
-            _onValueChanged -= valueChanged;
-        }
-
-        public void SetValue(object value)
+        void IBindableProperty.SetValue(object value)
         {
             try
             {
@@ -84,18 +95,8 @@ namespace TSFrame.MVVM
                     this.Value = default;
                 }
 
-                UnityEngine.Debug.LogError(ex.Message);
+                GameApp.Instance.LogError(ex.Message);
             }
-        }
-
-        public override string ToString()
-        {
-            return (Value != null ? Value.ToString() : "null");
-        }
-
-        public void Freed()
-        {
-            _onValueChanged = null;
         }
 
         object IBindableProperty.GetValue()
@@ -103,7 +104,7 @@ namespace TSFrame.MVVM
             return Value;
         }
 
-
+        #endregion
 
         #region operator
 
@@ -113,6 +114,7 @@ namespace TSFrame.MVVM
         }
 
         #endregion
+
         private static object ChangeType(object value, Type type)
         {
             if (value == null) return null;
