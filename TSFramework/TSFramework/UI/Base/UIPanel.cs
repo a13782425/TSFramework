@@ -12,7 +12,7 @@ namespace TSFrame.UI
     {
         public virtual UILayerEnum LayerEnum => UILayerEnum.Normal;
 
-        protected UIPanel() : base(null)
+        protected UIPanel() : base()
         {
 
         }
@@ -22,8 +22,8 @@ namespace TSFrame.UI
         }
         public T AddSubItem<T>(Transform parent) where T : UIItem, new()
         {
-            T t = UIView.CreateView<T>();
-            
+            T t = UIView.CreateView<T>(parent);
+
             return t;
         }
     }

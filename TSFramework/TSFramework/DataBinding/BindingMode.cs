@@ -9,6 +9,7 @@ namespace TSFrame.MVVM
     /// <summary>
     /// 绑定类型
     /// </summary>
+    [Flags]
     public enum BindingMode
     {
         /// <summary>
@@ -23,10 +24,10 @@ namespace TSFrame.MVVM
         /// <summary>
         /// UI更新Model
         /// </summary>
-        OneWayToSource = 3,
+        OneWayToSource = 4,
         /// <summary>
         /// UI和Model互相更新(慎用，容易变成递归操作)
         /// </summary>
-        TwoWay = 4,
+        TwoWay = 8,
     }
 }

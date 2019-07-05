@@ -122,6 +122,7 @@ namespace TSFrame
         /// <returns></returns>
         public GameApp SetLogger(ILogger logger)
         {
+            logger.IsEnable = true;
             _logger = logger;
             return this;
         }
@@ -197,9 +198,56 @@ namespace TSFrame
         /// <returns></returns>
         public GameApp SetResources(IResourcesLoader resourcesLoader)
         {
+            if (resourcesLoader != null)
+            {
+                if (DefaultResourcesModule.Instance != null)
+                {
+                    RemoveModule(DefaultResourcesModule.Instance);
+                    DefaultResourcesModule.Instance.Freed();
+                }
+            }
             _resourcesLoader = resourcesLoader;
             return this;
         }
+
+        #endregion
+
+        #region UI
+
+
+        private IUILoader _uiLoader = null;
+
+        internal IUILoader UILoader
+        {
+            get
+            {
+                if (_uiLoader == null)
+                {
+                    _uiLoader = DefaultUIModule.Instance;
+                }
+                return _uiLoader;
+            }
+        }
+        /// <summary>
+        /// 设置框架内部的资源读取模块
+        /// 如果不设置则为默认
+        /// </summary>
+        /// <param name="resourcesLoader"></param>
+        /// <returns></returns>
+        public GameApp SetUIModule(IUILoader uiloader)
+        {
+            if (uiloader != null)
+            {
+                if (DefaultUIModule.Instance != null)
+                {
+                    RemoveModule(DefaultUIModule.Instance);
+                    DefaultUIModule.Instance.Freed();
+                }
+            }
+            _uiLoader = uiloader;
+            return this;
+        }
+
 
         #endregion
 
@@ -339,6 +387,23 @@ namespace TSFrame
             foreach (var item in _moduleDtos)
             {
                 item.Module.Init();
+            }
+        }
+
+        private void RemoveModule<T>(BaseModule<T> module) where T : class, IModule, new()
+        {
+            ModuleDto dto = null;
+            foreach (var item in _moduleDtos)
+            {
+                if (item.Module is T)
+                {
+                    dto = item;
+                    break;
+                }
+            }
+            if (dto != null)
+            {
+                _moduleDtos.Remove(dto);
             }
         }
 

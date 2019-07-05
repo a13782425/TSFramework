@@ -2,15 +2,17 @@
 [Global]
 Placeholder=0
 
-; UI
+; UI,Asset文件夹下的路径，UI只能在Resources下面，例如在Asset/Resources/UI下面，只需要填写Resources/UI
 [UI]
 PanelPath=
 ItemPath=
 
+;UI脚本,Asset文件夹下的路径，例如在Asset/Script/Code下面，只需要填写Script/Code
 [UIScript]
 PanelScriptPath=
 ItemScriptPath=
 
+;导出游戏物体名称前缀对应的类型，慎重修改
 [UIExport]
 btn_=Button
 img_=Image
@@ -19,10 +21,10 @@ txtp_=TextPlus
 inp_=InputField
 srect_=ScrollRect
 sbar_=Scrollbar
-tog_= Toggle
+tog_=Toggle
 sli_=Slider
-drop_= Dropdown
-can_= Canvas
+drop_=Dropdown
+can_=Canvas
 go_=GameObject
 tran_=Transform
 rtran_=RectTransform

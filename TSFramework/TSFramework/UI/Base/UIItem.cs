@@ -10,7 +10,7 @@ namespace TSFrame.UI
 {
     public abstract class UIItem : UIView
     {
-        public UIItem(GameObject obj) : base(obj)
+        protected UIItem() : base()
         {
 
         }

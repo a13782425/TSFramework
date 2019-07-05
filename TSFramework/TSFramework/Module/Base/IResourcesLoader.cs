@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TSFrame.Module;
 using Object = UnityEngine.Object;
 
-namespace TSFrame
+namespace TSFrame.Module
 {
     public interface IResourcesLoader
     {

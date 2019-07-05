@@ -9,6 +9,6 @@ namespace TSFrame
     /// <summary>
     /// 自动注册
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public sealed class InjectAttribute : Attribute { }
 }

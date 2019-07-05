@@ -5,25 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.UI.Slider;
 
 namespace TSFrame.UI
 {
-    public sealed class UISlider : UIElement<Slider>, IBindingElement
+    public sealed class UIScrollbar : UIElement<Scrollbar>, IBindingElement
     {
-        internal UISlider(UIView uIView, Slider control) : base(uIView, control)
+        //public delegate void OnValueChanged(float value);
+        public UIScrollbar(UIView uIView, Scrollbar element) : base(uIView, element)
         {
-            //_supportType = new Type[]
-            //{
-            //    typeof(float),
-            //    typeof(double),
-            //    typeof(int),
-            //    typeof(long),
-            //    typeof(uint),
-            //    typeof(ulong),
-            //    typeof(string)
-            //};
-
             Element.onValueChanged.AddListener(tempValueChange);
         }
 
@@ -46,7 +35,6 @@ namespace TSFrame.UI
                 }
             }
         }
-
         public void SetValue(object obj)
         {
             if (obj == null)
@@ -90,13 +78,10 @@ namespace TSFrame.UI
             onValueChanged?.Invoke(val);
             ValueChanged?.Invoke(val);
         }
-
-
         protected override void OnDestroy()
         {
             Element.onValueChanged.RemoveAllListeners();
         }
-
 
     }
 }

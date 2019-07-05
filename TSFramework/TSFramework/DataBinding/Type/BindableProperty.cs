@@ -7,7 +7,7 @@ using TSFrame.UI;
 
 namespace TSFrame.MVVM
 {
-    public sealed partial class BindableProperty<T> : IBindableProperty
+    public sealed class BindableProperty<T> : IBindableProperty
     {
         private Action<T, T> _onValueChanged;
 
@@ -27,7 +27,6 @@ namespace TSFrame.MVVM
                     T old = _value;
                     _value = value;
                     ValueChanged(old, _value);
-
                 }
             }
         }
@@ -43,17 +42,6 @@ namespace TSFrame.MVVM
         {
             this.name = name;
         }
-
-        public void Bind(Action<T, T> valueChanged)
-        {
-            _onValueChanged += valueChanged;
-        }
-
-        public void Unbinding(Action<T, T> valueChanged)
-        {
-            _onValueChanged -= valueChanged;
-        }
-
 
         public override string ToString()
         {

@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine.UI;
 
 namespace TSFrame.UI
 {
+    public delegate void OnFloatValueChanged(float value);
+    public delegate void OnStringValueChanged(string value);
+    public delegate void OnBoolValueChanged(bool value);
     internal static class UIUtil
     {
         private const int FALSE = 0;
@@ -67,6 +71,31 @@ namespace TSFrame.UI
                 Thread.Sleep(10);
                 goto Begin;
             }
+        }
+
+        internal static T New<T>(UIView uIView, UnityEngine.EventSystems.UIBehaviour uIBehaviour) where T : UIElement
+        {
+            switch (uIBehaviour)
+            {
+                case Button button:
+                    return new UIButton(uIView, button) as T;
+                case Image image:
+                    return new UIImage(uIView, image) as T;
+                case TextPlus textPlus:
+                    return new UITextPlus(uIView, textPlus) as T;
+                case InputField inputField:
+                    return new UIInputField(uIView, inputField) as T;
+                case Text text:
+                    return new UIText(uIView, text) as T;
+                case Toggle toggle:
+                    return new UIToggle(uIView, toggle) as T;
+                case Slider slider:
+                    return new UISlider(uIView, slider) as T;
+                default:
+                    break;
+            }
+            return null;
+
         }
     }
 }

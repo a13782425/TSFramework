@@ -11,7 +11,7 @@ namespace TSFrame.UI
 {
     public sealed class UIText : UIElement<Text>, IBindingElement
     {
-        public UIText(Text control) : base(control)
+        internal UIText(UIView uIView, Text control) : base(uIView, control)
         {
         }
         /// <summary>

@@ -34,11 +34,15 @@ namespace TSFrame.UI
         private protected RectTransform _rectTransform = null;
         public RectTransform rectTransform => _rectTransform;
 
-        private Transform _parent = null;
+        private UIElement _parent = null;
         /// <summary>
         /// 父亲
         /// </summary>
-        public Transform parent { get => _parent; set { _parent = value; this.transform.SetParent(_parent); } }
+        public UIElement parent { get => _parent; set { _parent = value; this.transform.SetParent(_parent); } }
+        private protected UIView _uiView = null;
+        public UIView UIView => _uiView;
+        //private List<UIElement> _childs = null;
+        //protected List<UIElement> Childs => _childs;
         public HideFlags hideFlags { get => gameObject.hideFlags; set => gameObject.hideFlags = value; }
 
         public bool active
@@ -62,9 +66,15 @@ namespace TSFrame.UI
             }
         }
 
+
         #endregion
 
-        public UIElement(GameObject obj)
+        protected UIElement()
+        {
+            _instanceId = UIUtil.GetInstanceId();
+        }
+
+        protected UIElement(GameObject obj)
         {
             _instanceId = UIUtil.GetInstanceId();
             _gameObject = obj;
@@ -76,6 +86,7 @@ namespace TSFrame.UI
                     OnEnable();
                 }
             }
+
         }
 
         #region static
@@ -85,9 +96,10 @@ namespace TSFrame.UI
         /// <param name="obj"></param>
         public static void Destroy(UIElement obj)
         {
-            UnityEngine.Object.Destroy(obj.gameObject);
-            UIUtil.RecoverInstanceId(obj.InstanceId);
             obj.OnDestroy();
+            UnityEngine.Object.Destroy(obj.gameObject);
+            obj._gameObject = null;
+            UIUtil.RecoverInstanceId(obj.InstanceId);
             obj = null;
         }
 
@@ -97,9 +109,10 @@ namespace TSFrame.UI
         /// <param name="obj"></param>
         public static void DestroyImmediate(UIElement obj)
         {
-            UnityEngine.Object.DestroyImmediate(obj.gameObject);
-            UIUtil.RecoverInstanceId(obj.InstanceId);
             obj.OnDestroy();
+            UnityEngine.Object.DestroyImmediate(obj.gameObject);
+            obj._gameObject = null;
+            UIUtil.RecoverInstanceId(obj.InstanceId);
             obj = null;
         }
         #endregion
@@ -109,6 +122,10 @@ namespace TSFrame.UI
         public void DontDestroyOnLoad()
         {
             UnityEngine.Object.DontDestroyOnLoad(this.gameObject);
+        }
+        public virtual void Close()
+        {
+            Destroy(this);
         }
 
         #endregion
@@ -167,16 +184,42 @@ namespace TSFrame.UI
 
         public T Element => _element;
 
-        public UIElement(T element) : base(element.gameObject)
+
+
+        internal UIElement(UIView uIView, T element) : base(element.gameObject)
         {
             if (element == null)
             {
                 throw new Exception($"空间初始化为空：{typeof(T).GetType().FullName}");
             }
+            _uiView = uIView;
             _element = element;
-            _rectTransform = _element.GetComponent<RectTransform>();
+            UIMono uIMono = this.gameObject.AddComponent<UIMono>();
+            uIMono.Init(this);
+        }
+    }
+    class UIMono : MonoBehaviour
+    {
+        private UIElement _uIElement = null;
+        internal void Init<T>(UIElement<T> uIElement) where T : UIBehaviour
+        {
+            _uIElement = uIElement;
         }
 
+        void OnDestroy()
+        {
+            if (_uIElement is IBindingElement bindingElement)
+            {
+                if (_uIElement.UIView != null)
+                {
+                    _uIElement.UIView.RemoveElement(_uIElement);
+                    if (_uIElement.UIView.BindingContext != null)
+                    {
+                        _uIElement.UIView.BindingContext.Unbind(bindingElement, BindingMode.OneWayToSource);
+                        _uIElement.UIView.BindingContext.Unbind(bindingElement, BindingMode.TwoWay);
+                    }
+                }
+            }
+        }
     }
-
 }

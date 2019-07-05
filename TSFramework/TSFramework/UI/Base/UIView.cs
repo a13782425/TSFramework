@@ -17,6 +17,7 @@ namespace TSFrame.UI
         /// </summary>
         public abstract string UIPath { get; }
 
+
         public virtual int DefaultSiblingIndex => 0;
 
         /// <summary>
@@ -31,10 +32,10 @@ namespace TSFrame.UI
 
         public Binding BindingContext { get => _bindingContext; }
 
-        protected UIView(GameObject obj) : base(obj)
+        protected UIView() : base()
         {
             _uiElementDic = new Dictionary<int, UIElement>();
-            _gameObject = GameApp.Instance.ResourcesLoader.LoadOrCreate<GameObject>(UIPath);
+
             _bindingContext = new Binding(this);
         }
 
@@ -53,6 +54,8 @@ namespace TSFrame.UI
         #endregion
 
         #region override
+
+
         /// <summary>
         /// 初始化组件
         /// </summary>
@@ -93,7 +96,20 @@ namespace TSFrame.UI
             return _uiElementDic.ContainsKey(uIElement.InstanceId);
         }
 
+        protected void BindingElement<T>(UnityEngine.EventSystems.UIBehaviour behaviour, out T element)
+            where T : UIElement
+        {
+            element = UIUtil.New<T>(this, behaviour);
+            this.UIElementDic.Add(element.InstanceId, element);
+        }
 
+        internal void RemoveElement(UIElement uIElement)
+        {
+            if (UIElementDic.ContainsKey(uIElement.InstanceId))
+            {
+                UIElementDic.Remove(uIElement.InstanceId);
+            }
+        }
         internal IBindingElement GetBindingElement(int instanceId)
         {
             if (UIElementDic.ContainsKey(instanceId))
@@ -101,6 +117,13 @@ namespace TSFrame.UI
                 return UIElementDic[instanceId] as IBindingElement;
             }
             return null;
+        }
+
+        private void Initialize(Transform parent)
+        {
+            GameObject obj = GameApp.Instance.ResourcesLoader.Load<GameObject>(UIPath);
+            _gameObject = GameObject.Instantiate(obj, parent);
+            _rectTransform = _gameObject.GetComponent<RectTransform>();
         }
         #endregion
 
@@ -111,12 +134,20 @@ namespace TSFrame.UI
         /// </summary>
         /// <typeparam name="T1"></typeparam>
         /// <returns></returns>
-        public static T1 CreateView<T1>() where T1 : UIView, new()
+        public static T1 CreateView<T1>(Transform parent = null) where T1 : UIView, new()
         {
             T1 t = new T1();
+            if (parent == null)
+            {
+                if (t is UIPanel uIPanel)
+                {
+                    parent = GameApp.Instance.UILoader.GetParent(uIPanel.LayerEnum);
+                }
+            }
+            t.Initialize(parent);
             t.InitializeElement();
             t.OnCreate();
-            if (t.SiblingIndex != 0)
+            if (t.DefaultSiblingIndex != 0)
             {
                 t.SiblingIndex = t.DefaultSiblingIndex;
             }

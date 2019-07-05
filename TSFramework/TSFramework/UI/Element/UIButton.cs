@@ -14,7 +14,7 @@ namespace TSFrame.UI
         public delegate void onClick();
         public delegate void onClickWithObj(GameObject obj);
 
-        public UIButton(Button control) : base(control)
+        internal UIButton(UIView uIView, Button control) : base(uIView, control)
         {
             Element.onClick.AddListener(tempOnClick);
         }

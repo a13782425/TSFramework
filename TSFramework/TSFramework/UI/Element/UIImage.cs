@@ -11,7 +11,7 @@ namespace TSFrame.UI
 {
     public sealed class UIImage : UIElement<Image>, IBindingElement
     {
-        public UIImage(Image control) : base(control)
+        internal UIImage(UIView uIView, Image control) : base(uIView, control)
         {
         }
 

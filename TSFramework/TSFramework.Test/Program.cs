@@ -6,28 +6,63 @@ using System.Threading.Tasks;
 using TSFrame;
 using TSFrame.MVVM;
 using TSFrame.UI;
-
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace TSFrame.Test
 {
     class Program
     {
+        static BindableProperty<string> str1 = new BindableProperty<string>();
         static void Main(string[] args)
         {
-            List<int> list = new List<int>();
-            list.Add(1);
-            list.Add(1);
-            list.Add(1);
-            foreach (var item in list)
+            Type enumType = typeof(UILayerEnum);
+            string[] strs = Enum.GetNames(enumType);
+            foreach (var item in strs)
             {
-                Console.WriteLine(item);
+                UILayerEnum uILayerEnum = (UILayerEnum)Enum.Parse(enumType, item);
+                Console.WriteLine(uILayerEnum);
             }
+            //string str = "btn_aaa_";
+            //int index = str.IndexOf("_");
+            //index++;
+            //string s = str.Substring(index, str.Length - index);
+            //Console.WriteLine(s);
+            //BindableList<int> list = new BindableList<int>();
+            //int[] text = new int[] { 1, 2, 3 };
+            //BindableList<int> list1 = new BindableList<int>(text);
+            //foreach (var item in list1)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //Type type = typeof(TSFrame.MVVM.BindableProperty<>);
+            //Type fieldType = str1.GetType();
+            //Type[] types = type.GetInterfaces();
+            //foreach (var item in types)
+            //{
+            //    Console.WriteLine(item.Name);
+            //}
+            //Console.WriteLine(types[0].IsAssignableFrom(fieldType));
+            //List<int> list = new List<int>();
+            //list.Add(1);
+            //list.Add(1);
+            //list.Add(1);
+            //foreach (var item in list)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //UIButton uIButton = new UIButton(new Button());
+            //a<UIButton,Button>(null,out uIButton);
 
-            Panel p = new Panel();
-            p.BindingContext.Bind("", null);
-            p.BindingContext.SourceData = new TestModel();
+            //Panel p = new Panel();
+            //p.BindingContext.Bind("", null);
+            //p.BindingContext.SourceData = new TestModel();
             Console.ReadKey();
         }
+        //static void a<T1>(T1 uI, out UIElement<T1> t) where T1 : UIBehaviour 
+        //{
+        //    t = new UIElement<T1>(uI);
+        //}
     }
 
     public class TestModel : BindingModel

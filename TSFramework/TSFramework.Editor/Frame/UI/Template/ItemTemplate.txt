@@ -1,1 +1,32 @@
-﻿
+﻿//------------------------------------------------------------------------------------------------------------
+//-----------------------------------generate file {GeneratedTime}----------------------------------------
+//------------------------------------------------------------------------------------------------------------
+using TSFrame.MVVM;
+using TSFrame.UI;
+using UnityEngine;
+using UnityEngine.UI;
+
+public partial class {ClassName} : UIItem
+{
+    public override string UIPath => "{UIPath}";
+
+	#region variable
+
+{Variable}
+    #endregion
+
+	public {ClassName}() : base()
+    {
+
+{InjectData}
+    }
+
+    protected override void InitializeElement()
+    {
+        //初始化组件
+
+{BindComponent}
+		//绑定数据
+{BindData}
+    }
+}

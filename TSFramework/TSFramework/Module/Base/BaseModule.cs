@@ -8,8 +8,11 @@ using TSFrame;
 
 namespace TSFrame.Module
 {
-    public abstract class BaseModule<T> : Singleton<T>, IModule where T : class, IModule, new()
+    public abstract class BaseModule<T> : IModule where T : class, IModule, new()
     {
+        private static T _instance = null;
+
+        public static T Instance => _instance;
 
         private UnityEngine.GameObject _gameObject;
         public UnityEngine.GameObject gameObject => _gameObject;
@@ -20,6 +23,8 @@ namespace TSFrame.Module
         public BaseModule()
         {
             _gameObject = new UnityEngine.GameObject(this.GetType().Name);
+            _gameObject.transform.SetParent(GameApp.Instance.transform);
+            _instance = this as T;
         }
         /// <summary>
         /// 初始化

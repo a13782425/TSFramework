@@ -15,10 +15,10 @@ namespace TSFrame.UI
     /// </summary>
     public sealed class UIInputField : UIElement<InputField>, IBindingElement
     {
-        public delegate void OnValueChanged(string value);
+        //public delegate void OnValueChanged(string value);
 
         #region 构造
-        public UIInputField(InputField control) : base(control)
+        internal UIInputField(UIView uIView, InputField control) : base(uIView, control)
         {
             //_supportType = new Type[]
             //{
@@ -46,8 +46,8 @@ namespace TSFrame.UI
 
         public event ValueChangedEvent ValueChanged;
 
-        private OnValueChanged _onValueChanged;
-        public OnValueChanged onValueChanged
+        private OnStringValueChanged _onValueChanged;
+        public OnStringValueChanged onValueChanged
         {
             get { return _onValueChanged; }
             set { _onValueChanged = value; }
@@ -66,7 +66,7 @@ namespace TSFrame.UI
         private void tempValueChange(string value)
         {
             onValueChanged?.Invoke(value);
-            ValueChanged(value);
+            ValueChanged?.Invoke(value);
         }
 
         protected override void OnDestroy()

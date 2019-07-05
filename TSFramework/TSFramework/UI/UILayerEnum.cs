@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace TSFrame.UI
 {
-    [Flags]
     public enum UILayerEnum : int
     {
         None = 1 << 0,

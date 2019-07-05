@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TSFrame.MVVM;
 using TSFrame.UI;
 
 namespace TSFrame
@@ -10,14 +11,13 @@ namespace TSFrame
     /// <summary>
     /// 自动注册
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
     public sealed class BindingAttribute : Attribute
     {
-        public Type View { get; private set; }
-        public BindingAttribute(Type panelType)
+        public BindingMode Mode { get; private set; }
+        public BindingAttribute(BindingMode bindingMode = BindingMode.OneWay)
         {
-            View = panelType;
+            Mode = bindingMode;
         }
     }
-
 }

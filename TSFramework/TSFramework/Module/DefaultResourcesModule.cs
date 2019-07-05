@@ -135,7 +135,16 @@ namespace TSFrame.Module
 
         public override void Freed()
         {
-
+            foreach (KeyValuePair<string, ResourcesDto> item in _resourcesCacheDic)
+            {
+                ResourcesDto resourcesDto = item.Value;
+                Object.Destroy(resourcesDto.ResourceObj);
+                resourcesDto.ResourceObj = null;
+            }
+            _resourcesCacheDic.Clear();
+            _destroyTempList.Clear();
+            Resources.UnloadUnusedAssets();
+            Object.Destroy(this.gameObject);
         }
 
         private class ResourcesDto

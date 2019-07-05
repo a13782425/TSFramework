@@ -9,8 +9,7 @@ namespace TSFrame.UI
 {
     public sealed class UIToggle : UIElement<Toggle>, IBindingElement
     {
-        public delegate void OnValueChanged(bool value);
-        public UIToggle(Toggle control) : base(control)
+        internal UIToggle(UIView uIView, Toggle control) : base(uIView, control)
         {
             //_supportType = new Type[]
             //{
@@ -24,9 +23,9 @@ namespace TSFrame.UI
 
 
         public event ValueChangedEvent ValueChanged;
-        private OnValueChanged _onValueChanged;
+        private OnBoolValueChanged _onValueChanged;
 
-        public OnValueChanged onValueChanged
+        public OnBoolValueChanged onValueChanged
         {
             get { return _onValueChanged; }
             set { _onValueChanged = value; }
@@ -46,7 +45,7 @@ namespace TSFrame.UI
         private void tempValueChange(bool value)
         {
             onValueChanged?.Invoke(value);
-            ValueChanged.Invoke(value);
+            ValueChanged?.Invoke(value);
         }
 
         protected override void OnDestroy()

@@ -167,6 +167,28 @@ namespace TSFrame.MVVM
                     break;
             }
         }
+        public void Unbind(string fieldName, BindingMode bindingMode)
+        {
+            if (_bindPropertyDic.ContainsKey(fieldName))
+            {
+                _bindPropertyDic[fieldName].Unbind(bindingMode);
+            }
+            foreach (KeyValuePair<int, BindElementData> item in _bindElementDic)
+            {
+                item.Value.Unbind(fieldName, bindingMode);
+            }
+        }
+        public void Unbind(IBindingElement element, BindingMode bindingMode)
+        {
+            if (_bindElementDic.ContainsKey(element.InstanceId))
+            {
+                _bindElementDic[element.InstanceId].Unbind(bindingMode);
+            }
+            foreach (KeyValuePair<string, BindPropertyData> item in _bindPropertyDic)
+            {
+                item.Value.Unbind(element, bindingMode);
+            }
+        }
 
         private void UnbindProp(string fieldName, IBindingElement element, BindingMode bindingMode)
         {
@@ -212,18 +234,18 @@ namespace TSFrame.MVVM
             List<FieldInfo> fieldInfos = BindingCacheData.GetFieldInfos(type);
             foreach (var item in fieldInfos)
             {
-                if (_bindPropertyDic.ContainsKey(item.Name))
+                object value = item.GetValue(data);
+                if (value is IBindableProperty bindableProperty)
                 {
-                    BindPropertyData bindData = _bindPropertyDic[item.Name];
-                    object value = item.GetValue(data);
-                    if (value is IBindableProperty bindableProperty)
+                    if (_bindPropertyDic.ContainsKey(item.Name))
                     {
+                        BindPropertyData bindData = _bindPropertyDic[item.Name];
                         bindData.Reset();
                         bindData.BindProp(bindableProperty);
-                        foreach (KeyValuePair<int, BindElementData> temp in _bindElementDic)
-                        {
-                            temp.Value.SetProp(bindableProperty);
-                        }
+                    }
+                    foreach (KeyValuePair<int, BindElementData> temp in _bindElementDic)
+                    {
+                        temp.Value.SetProp(bindableProperty);
                     }
                 }
             }
@@ -260,7 +282,11 @@ namespace TSFrame.MVVM
             }
             internal bool Remove(IBindingElement bindingElement, BindingMode bindingMode)
             {
-                return this._bindingElementDic[bindingMode].Remove(bindingElement);
+                if (this._bindingElementDic.ContainsKey(bindingMode))
+                {
+                    return this._bindingElementDic[bindingMode].Remove(bindingElement);
+                }
+                return false;
             }
 
             public override string ToString()
@@ -352,6 +378,14 @@ namespace TSFrame.MVVM
                 }
                 Reset();
             }
+
+            internal void Unbind(BindingMode bindingMode)
+            {
+                if (_bindingElementDic.ContainsKey(bindingMode))
+                {
+                    _bindingElementDic[bindingMode].Clear();
+                }
+            }
         }
 
         private class BindElementData
@@ -429,14 +463,6 @@ namespace TSFrame.MVVM
                 }
             }
 
-            ///// <summary>
-            ///// 绑定组件
-            ///// </summary>
-            //internal void BindElement()
-            //{
-
-            //}
-
             private void BindingElement_ValueChanged(object value)
             {
                 SetValue(BindingMode.OneWayToSource, value);
@@ -479,6 +505,14 @@ namespace TSFrame.MVVM
                     item.Value.Clear();
                 }
                 Reset();
+            }
+
+            internal void Unbind(BindingMode bindingMode)
+            {
+                if (_bindingProertyDic.ContainsKey(bindingMode))
+                {
+                    _bindingProertyDic[bindingMode].Clear();
+                }
             }
         }
     }

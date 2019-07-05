@@ -8,7 +8,7 @@ namespace TSFrame.UI
 {
     public sealed class UITextPlus : UIElement<TextPlus>, IBindingElement
     {
-        public UITextPlus(TextPlus control) : base(control)
+        internal UITextPlus(UIView uIView, TextPlus control) : base(uIView, control)
         {
         }
         /// <summary>
