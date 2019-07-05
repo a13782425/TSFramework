@@ -136,10 +136,10 @@ namespace TSFrame.UI
         {
 
         }
-        protected virtual void Update()
-        {
+        //protected virtual void Update()
+        //{
 
-        }
+        //}
         protected virtual void OnDisable()
         {
 

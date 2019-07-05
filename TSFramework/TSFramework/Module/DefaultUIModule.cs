@@ -24,17 +24,30 @@ namespace TSFrame.Module
 
         private List<UIPanel> _panelList = null;
 
+        //private List<UIPanel> _needClosePanel = null;
+
         public override void Init()
         {
             base.Init();
+            CreateMainObj();
+            CreateLayerObj();
+            _panelDic = new Dictionary<int, UIPanel>();
+            _panelList = new List<UIPanel>();
+            //_needClosePanel = new List<UIPanel>();
+        }
+        private void CreateMainObj()
+        {
             _mainObj = new GameObject("MainUI", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             _mainObj.transform.SetParent(this.transform);
             _canvas = _mainObj.GetComponent<Canvas>();
             _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             _tranDic = new Dictionary<UILayerEnum, RectTransform>();
-            _eventSystem = new GameObject("System",typeof(Transform),typeof(EventSystem),typeof(StandaloneInputModule));
-            _eventSystem.hideFlags = HideFlags.HideInHierarchy|HideFlags.HideInInspector;
+            _eventSystem = new GameObject("System", typeof(EventSystem), typeof(StandaloneInputModule));
+            _eventSystem.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector;
             _eventSystem.transform.SetParent(this.transform);
+        }
+        private void CreateLayerObj()
+        {
             Type enumType = typeof(UILayerEnum);
             string[] strs = Enum.GetNames(enumType);
             foreach (var item in strs)
@@ -50,8 +63,6 @@ namespace TSFrame.Module
                 rectTransform.SetSiblingIndex((int)uILayerEnum);
                 _tranDic.Add(uILayerEnum, rectTransform);
             }
-            _panelDic = new Dictionary<int, UIPanel>();
-            _panelList = new List<UIPanel>();
         }
         public T CreatePanel<T>() where T : UIPanel, new()
         {
@@ -106,7 +117,10 @@ namespace TSFrame.Module
             {
                 _panelList.Remove(uIPanel);
                 _panelDic.Remove(uIPanel.InstanceId);
-                uIPanel.Close();
+                if (uIPanel.gameObject != null)
+                {
+                    uIPanel.Close();
+                }
             }
         }
         public void ClosePanel<T>() where T : UIPanel, new()
@@ -122,16 +136,12 @@ namespace TSFrame.Module
             foreach (var item in tempList)
             {
                 _panelList.Remove(item);
-                if (item != null)
+                _panelDic.Remove(item.InstanceId);
+                if (item.gameObject != null)
                 {
-                    _panelDic.Remove(item.InstanceId);
-                    if (item.gameObject != null)
-                    {
-                        item.Close();
-                    }
+                    item.Close();
                 }
             }
-
         }
 
         public Transform GetParent(UILayerEnum uILayerEnum)
@@ -146,12 +156,11 @@ namespace TSFrame.Module
             }
         }
 
-
         public override void Freed()
         {
             foreach (var item in _panelList)
             {
-                if (item!=null)
+                if (item != null)
                 {
                     item.Close();
                 }
@@ -161,5 +170,6 @@ namespace TSFrame.Module
             _panelDic.Clear();
             Object.Destroy(this.gameObject);
         }
+
     }
 }
