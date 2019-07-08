@@ -140,8 +140,8 @@ internal static class UIEditorUtils
                                 string element = panelFieldInfo.Name;
                                 int index = element.IndexOf('_');
                                 index++;
-                                element = element.Substring(index, element.Length - index);
-                                if (element.ToLower() == injectFieldName.ToLower())
+                                string tempElement = element.Substring(index, element.Length - index);
+                                if (tempElement.ToLower() == injectFieldName.ToLower())
                                 {
                                     if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWay) > 0)
                                     {
