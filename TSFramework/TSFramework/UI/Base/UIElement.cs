@@ -96,6 +96,7 @@ namespace TSFrame.UI
         /// <param name="obj"></param>
         public static void Destroy(UIElement obj)
         {
+            obj.OnDisable();
             obj.OnDestroy();
             UnityEngine.Object.Destroy(obj.gameObject);
             obj._gameObject = null;
@@ -123,7 +124,7 @@ namespace TSFrame.UI
         {
             UnityEngine.Object.DontDestroyOnLoad(this.gameObject);
         }
-        public virtual void Close()
+        public void Close()
         {
             Destroy(this);
         }

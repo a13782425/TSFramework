@@ -16,14 +16,15 @@ namespace TSFrame.UI
             Element.onValueChanged.AddListener(tempValueChange);
         }
 
+        /// <summary>
+        /// 绑定的值改变
+        /// </summary>
         public event ValueChangedEvent ValueChanged;
-        private OnFloatValueChanged _onValueChanged;
 
-        public OnFloatValueChanged onValueChanged
-        {
-            get { return _onValueChanged; }
-            set { _onValueChanged = value; }
-        }
+        /// <summary>
+        /// Scrollbar的值改变
+        /// </summary>
+        public event OnFloatValueChanged onValueChanged = null;
         public float value
         {
             get { return Element.value; }
@@ -81,6 +82,7 @@ namespace TSFrame.UI
         protected override void OnDestroy()
         {
             Element.onValueChanged.RemoveAllListeners();
+            onValueChanged = null;
         }
 
     }

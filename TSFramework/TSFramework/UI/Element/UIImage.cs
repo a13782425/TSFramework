@@ -35,8 +35,13 @@ namespace TSFrame.UI
                     sprite = sp;
                     break;
                 case string str:
-                    //todo Resources.Load
                     sprite = GameApp.Instance.ResourcesLoader.Load<Sprite>(str);
+                    break;
+                case float f:
+                    fillAmount = f;
+                    break;
+                case double d:
+                    fillAmount = (float)d;
                     break;
                 default:
                     GameApp.Instance.LogError("设置类型不支持：" + value.GetType().Name);

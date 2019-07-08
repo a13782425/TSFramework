@@ -64,6 +64,17 @@ namespace TSFrame
             }
             Object.Destroy(gameObject);
         }
+
+        /// <summary>
+        /// 启动协程
+        /// </summary>
+        /// <param name="routine"></param>
+        /// <returns></returns>
+        public Coroutine StartCoroutine(IEnumerator routine)
+        {
+            return _gameMono.StartCoroutine(routine);
+        }
+
         /// <summary>
         /// 启动协程
         /// </summary>

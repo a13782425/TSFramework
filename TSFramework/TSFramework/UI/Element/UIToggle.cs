@@ -23,13 +23,8 @@ namespace TSFrame.UI
 
 
         public event ValueChangedEvent ValueChanged;
-        private OnBoolValueChanged _onValueChanged;
 
-        public OnBoolValueChanged onValueChanged
-        {
-            get { return _onValueChanged; }
-            set { _onValueChanged = value; }
-        }
+        public event OnBoolValueChanged onValueChanged = null;
 
         public void SetValue(object value)
         {
@@ -51,6 +46,7 @@ namespace TSFrame.UI
         protected override void OnDestroy()
         {
             this.Element.onValueChanged.RemoveAllListeners();
+            onValueChanged = null;
         }
     }
 }

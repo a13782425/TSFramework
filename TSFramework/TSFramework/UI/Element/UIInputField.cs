@@ -44,14 +44,15 @@ namespace TSFrame.UI
             set { Element.text = value; }
         }
 
+        /// <summary>
+        /// 绑定数据变化事件
+        /// </summary>
         public event ValueChangedEvent ValueChanged;
 
-        private OnStringValueChanged _onValueChanged;
-        public OnStringValueChanged onValueChanged
-        {
-            get { return _onValueChanged; }
-            set { _onValueChanged = value; }
-        }
+        /// <summary>
+        /// 输入框文本变化
+        /// </summary>
+        public event OnStringValueChanged onValueChanged = null;
         #endregion
 
         public void SetValue(object value)
@@ -73,6 +74,7 @@ namespace TSFrame.UI
         {
             base.OnDestroy();
             this.Element.onValueChanged.RemoveAllListeners();
+            onValueChanged = null;
         }
     }
 }

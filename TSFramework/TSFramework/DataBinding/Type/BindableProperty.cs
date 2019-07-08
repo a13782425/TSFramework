@@ -53,6 +53,28 @@ namespace TSFrame.MVVM
             _onValueChanged = null;
         }
 
+        /// <summary>
+        /// 订阅
+        /// </summary>
+        /// <param name="action">Action(先前的值，现在的值)</param>
+        /// <returns></returns>
+        public BindableProperty<T> Subscribe(Action<T, T> action)
+        {
+            _onValueChanged += action;
+            return this;
+        }
+
+        /// <summary>
+        /// 订阅
+        /// </summary>
+        /// <param name="action">Action(先前的值，现在的值)</param>
+        /// <returns></returns>
+        public BindableProperty<T> Unsubscribe(Action<T, T> action)
+        {
+            _onValueChanged -= action;
+            return this;
+        }
+
         #region private
 
         private void ValueChanged(T oldValue, T newValue)

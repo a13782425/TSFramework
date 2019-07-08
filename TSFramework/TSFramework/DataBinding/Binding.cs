@@ -116,22 +116,67 @@ namespace TSFrame.MVVM
 
         private void BindElement(string fieldName, IBindingElement element, BindingMode bindingMode)
         {
+            bool isNew = false;
             if (!_bindElementDic.ContainsKey(element.InstanceId))
             {
                 _bindElementDic.Add(element.InstanceId, new BindElementData(element));
+                isNew = true;
             }
             BindElementData bindData = _bindElementDic[element.InstanceId];
             bindData.Add(fieldName, bindingMode);
+            if (isNew)
+            {
+                if (SourceData != null)
+                {
+                    Type type = SourceData.GetType();
+                    List<FieldInfo> fieldInfos = BindingCacheData.GetFieldInfos(type);
+                    foreach (var item in fieldInfos)
+                    {
+                        if (item.Name == fieldName)
+                        {
+                            object value = item.GetValue(SourceData);
+                            if (value is IBindableProperty bindableProperty)
+                            {
+                                bindData.SetProp(bindableProperty);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void BindProp(string fieldName, IBindingElement element, BindingMode bindingMode = BindingMode.OneWay)
         {
+            bool isNew = false;
             if (!_bindPropertyDic.ContainsKey(fieldName))
             {
                 _bindPropertyDic.Add(fieldName, new BindPropertyData(fieldName));
+                isNew = true;
             }
             BindPropertyData bindData = _bindPropertyDic[fieldName];
             bindData.Add(element, bindingMode);
+            if (isNew)
+            {
+                if (SourceData != null)
+                {
+                    Type type = SourceData.GetType();
+                    List<FieldInfo> fieldInfos = BindingCacheData.GetFieldInfos(type);
+                    foreach (var item in fieldInfos)
+                    {
+                        if (item.Name == fieldName)
+                        {
+                            object value = item.GetValue(SourceData);
+                            if (value is IBindableProperty bindableProperty)
+                            {
+                                bindData.Reset();
+                                bindData.BindProp(bindableProperty);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
         /// <summary>
         /// 取消绑定

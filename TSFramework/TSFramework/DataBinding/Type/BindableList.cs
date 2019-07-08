@@ -35,7 +35,6 @@ namespace TSFrame.MVVM
 
         #endregion
 
-
         #region Method
 
         public BindableList<T> Add(T item, bool publish = true)
@@ -61,7 +60,7 @@ namespace TSFrame.MVVM
             return Publish(publish);
         }
 
-        public BindableList<T> RemoveAll(Predicate<T> match,bool publish = true)
+        public BindableList<T> RemoveAll(Predicate<T> match, bool publish = true)
         {
             this._list.RemoveAll(match);
             return Publish(publish);

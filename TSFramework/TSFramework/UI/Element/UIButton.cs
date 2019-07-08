@@ -19,17 +19,21 @@ namespace TSFrame.UI
             Element.onClick.AddListener(tempOnClick);
         }
 
-        private onClick _onClick;
-
-        public onClick OnClick { get => _onClick; set => _onClick = value; }
-
-        private onClickWithObj _onClickWithObj;
-        public onClickWithObj OnClickWithObj { get => _onClickWithObj; set => _onClickWithObj = value; }
+        /// <summary>
+        /// 点击事件
+        /// </summary>
+        public event onClick OnClick = null;
+        /// <summary>
+        /// 带参的点击事件
+        /// </summary>
+        public event onClickWithObj OnClickWithObj = null;
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
             Element.onClick.RemoveAllListeners();
+            OnClickWithObj = null;
+            OnClick = null;
         }
 
         private void tempOnClick()
