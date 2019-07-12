@@ -32,12 +32,16 @@ namespace TSFrame.UI
 
         public Binding BindingContext { get => _bindingContext; }
 
+        private List<Coroutine> _coroutinesList = new List<Coroutine>();
+
         protected UIView() : base()
         {
             _uiElementDic = new Dictionary<int, UIElement>();
 
             _bindingContext = new Binding(this);
         }
+
+
 
         #region public
 
@@ -74,11 +78,52 @@ namespace TSFrame.UI
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
             _bindingContext.UnbindAll();
             _bindingContext = null;
         }
 
+        internal override void Internal_OnEnable()
+        {
+            foreach (var item in _uiElementDic)
+            {
+                item.Value.Internal_OnEnable();
+            }
+            this.OnEnable();
+            this.BindingContext.active = true;
+        }
+
+        internal override void Internal_OnDisable()
+        {
+            this.BindingContext.active = false;
+            foreach (var item in _uiElementDic)
+            {
+                item.Value.Internal_OnDisable();
+            }
+            this.OnDisable();
+        }
+
+        #endregion
+
+        #region protected
+        /// <summary>
+        /// 启动协程
+        /// </summary>
+        /// <param name="routine"></param>
+        /// <returns></returns>
+        protected Coroutine StartCoroutine(IEnumerator routine)
+        {
+            Coroutine coroutine = GameApp.Instance.StartCoroutine(routine);
+            return coroutine;
+        }
+        /// <summary>
+        /// 停止协程
+        /// </summary>
+        /// <param name="coroutine"></param>
+        /// <returns></returns>
+        public void StopCoroutine(Coroutine coroutine)
+        {
+            GameApp.Instance.StopCoroutine(coroutine);
+        }
         #endregion
 
         #region 内部函数
@@ -95,14 +140,25 @@ namespace TSFrame.UI
             }
             return _uiElementDic.ContainsKey(uIElement.InstanceId);
         }
-
+        /// <summary>
+        /// 绑定组件到View
+        /// </summary>
+        /// <param name="behaviour"></param>
+        /// <param name="element"></param>
         protected void BindingElement<T>(UnityEngine.EventSystems.UIBehaviour behaviour, out T element)
             where T : UIElement
         {
             element = UIUtil.New<T>(this, behaviour);
             this.UIElementDic.Add(element.InstanceId, element);
         }
-
+        /// <summary>
+        /// 绑定组件到View
+        /// </summary>
+        /// <param name="element"></param>
+        internal void BindingElement(UIElement element)
+        {
+            this.UIElementDic.Add(element.InstanceId, element);
+        }
         internal void RemoveElement(UIElement uIElement)
         {
             if (UIElementDic.ContainsKey(uIElement.InstanceId))

@@ -31,7 +31,7 @@ internal static class UIEditorUtils
         {"Scrollbar", "UIScrollbar" }
     };
 
-    [MenuItem("TSFrame/UI/生成全部", false, 2)]
+    [MenuItem("TSFrame/UI/生成全部 &#U", false, 2)]
     internal static void GenerateAll()
     {
         PanelEditor.GeneratePanel();

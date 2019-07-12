@@ -30,7 +30,7 @@ internal static class PanelEditor
 
     //internal static FieldInfo _injectModelField = null;
 
-    [MenuItem("TSFrame/UI/生成Panel", false, 0)]
+    [MenuItem("TSFrame/UI/生成Panel #P", false, 0)]
     internal static void GeneratePanel()
     {
         try

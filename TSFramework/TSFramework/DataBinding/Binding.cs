@@ -13,11 +13,11 @@ namespace TSFrame.MVVM
     {
         #region variable
 
-        private object _sourceData = null;
+        private IDisposable _sourceData = null;
         /// <summary>
         /// 当前绑定的数据
         /// </summary>
-        public object SourceData { get => _sourceData; set { SourceDataChange(value); } }
+        public IDisposable SourceData { get => _sourceData; set { SourceDataChange(value); } }
 
         /// <summary>
         /// 绑定数据对应绑定模式缓存
@@ -28,13 +28,25 @@ namespace TSFrame.MVVM
         private readonly Dictionary<int, BindElementData> _bindElementDic = null;
 
         private readonly UIView _view = null;
-        #endregion
 
-        //public Binding()
-        //{
-        //    _bindPropertyDic = new Dictionary<string, BindPropertyData>();
-        //    _bindElementDic = new Dictionary<IBindingElement, BindElementData>();
-        //}
+        private bool _active = true;
+        internal bool active
+        {
+            get => _active; set
+            {
+                bool b = _active;
+                _active = value;
+                if (b != value)
+                {
+                    if (value)
+                    {
+                        PushValue();
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         public Binding(UIView view)
         {
@@ -46,6 +58,7 @@ namespace TSFrame.MVVM
             _bindPropertyDic = new Dictionary<string, BindPropertyData>();
             _bindElementDic = new Dictionary<int, BindElementData>();
             _view = view;
+            _active = true;
         }
 
         /// <summary>
@@ -119,7 +132,7 @@ namespace TSFrame.MVVM
             bool isNew = false;
             if (!_bindElementDic.ContainsKey(element.InstanceId))
             {
-                _bindElementDic.Add(element.InstanceId, new BindElementData(element));
+                _bindElementDic.Add(element.InstanceId, new BindElementData(this, element));
                 isNew = true;
             }
             BindElementData bindData = _bindElementDic[element.InstanceId];
@@ -151,7 +164,7 @@ namespace TSFrame.MVVM
             bool isNew = false;
             if (!_bindPropertyDic.ContainsKey(fieldName))
             {
-                _bindPropertyDic.Add(fieldName, new BindPropertyData(fieldName));
+                _bindPropertyDic.Add(fieldName, new BindPropertyData(this, fieldName));
                 isNew = true;
             }
             BindPropertyData bindData = _bindPropertyDic[fieldName];
@@ -263,12 +276,16 @@ namespace TSFrame.MVVM
             {
                 item.Value.UnbindAll();
             }
+            if (this.SourceData != null)
+            {
+                this.SourceData.Dispose();
+            }
         }
 
         /// <summary>
         /// 源数据改变回调
         /// </summary>
-        private void SourceDataChange(object data)
+        private void SourceDataChange(IDisposable data)
         {
             if (data == null)
             {
@@ -301,14 +318,31 @@ namespace TSFrame.MVVM
             }
         }
 
+        /// <summary>
+        /// 数据源从隐藏到显示推数据
+        /// </summary>
+        private void PushValue()
+        {
+            foreach (KeyValuePair<string, BindPropertyData> item in _bindPropertyDic)
+            {
+                item.Value.SetValue(BindingMode.OneWay);
+                item.Value.SetValue(BindingMode.TwoWay);
+            }
+            foreach (KeyValuePair<int, BindElementData> item in _bindElementDic)
+            {
+                item.Value.SetLastValue();
+            }
+        }
+
         private class BindPropertyData
         {
             internal string FieldName { get; private set; }
             internal Dictionary<BindingMode, List<IBindingElement>> _bindingElementDic = null;
-
+            private Binding _currentBinding = null;
             private IBindableProperty _bindableProperty = null;
-            internal BindPropertyData(string fieldName)
+            internal BindPropertyData(Binding binding, string fieldName)
             {
+                _currentBinding = binding;
                 FieldName = fieldName;
                 _bindingElementDic = new Dictionary<BindingMode, List<IBindingElement>>
                 {
@@ -383,6 +417,10 @@ namespace TSFrame.MVVM
             /// <param name="value"></param>
             public void SetValue(BindingMode bindingMode, object o)
             {
+                if (!_currentBinding.active)
+                {
+                    return;
+                }
                 List<IBindingElement> bindingElements = _bindingElementDic[bindingMode];
                 if (bindingElements.Count > 0)
                 {
@@ -436,9 +474,13 @@ namespace TSFrame.MVVM
         private class BindElementData
         {
             internal IBindingElement BindingElement { get; private set; }
+            private Binding _currentBinding = null;
+            private object _lastValue = null;
+            private bool _isChange = false;
             internal Dictionary<BindingMode, Dictionary<string, IBindableProperty>> _bindingProertyDic = null;
-            internal BindElementData(IBindingElement bindingElement)
+            internal BindElementData(Binding binding, IBindingElement bindingElement)
             {
+                _currentBinding = binding;
                 BindingElement = bindingElement;
                 _bindingProertyDic = new Dictionary<BindingMode, Dictionary<string, IBindableProperty>>
                 {
@@ -514,12 +556,30 @@ namespace TSFrame.MVVM
                 SetValue(BindingMode.TwoWay, value);
             }
             /// <summary>
+            /// 内部设定最后一次Value
+            /// </summary>
+            public void SetLastValue()
+            {
+                if (_isChange)
+                {
+                    _isChange = false;
+                    SetValue(BindingMode.OneWayToSource, _lastValue);
+                    SetValue(BindingMode.TwoWay, _lastValue);
+                }
+            }
+            /// <summary>
             /// 设置Value
             /// </summary>
             /// <param name="bindingMode"></param>
             /// <param name="value"></param>
             private void SetValue(BindingMode bindingMode, object value)
             {
+                if (!_currentBinding.active)
+                {
+                    _lastValue = value;
+                    _isChange = true;
+                    return;
+                }
                 Dictionary<string, IBindableProperty> dic = _bindingProertyDic[bindingMode];
                 if (dic.Count > 0)
                 {

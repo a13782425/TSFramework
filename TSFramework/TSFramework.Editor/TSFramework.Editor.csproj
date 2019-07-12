@@ -56,6 +56,13 @@
   <ItemGroup>
     <Compile Include="Frame\IniTool.cs" />
     <Content Include="Frame\Template\ConfigTemplate.txt" />
+    <Compile Include="Frame\UGUIFontEditor\FontEditor.cs" />
+    <Compile Include="Frame\UGUIFontEditor\Font\ArtistFont.cs" />
+    <Compile Include="Frame\UGUIFontEditor\Font\BetterList.cs" />
+    <Compile Include="Frame\UGUIFontEditor\Font\BMFont.cs" />
+    <Compile Include="Frame\UGUIFontEditor\Font\BMFontReader.cs" />
+    <Compile Include="Frame\UGUIFontEditor\Font\BMGlyph.cs" />
+    <Compile Include="Frame\UGUIFontEditor\Font\ByteReader.cs" />
     <Compile Include="Frame\UI\ItemEditor.cs" />
     <Compile Include="Frame\UI\PanelEditor.cs" />
     <Content Include="Frame\UI\Template\UIDescription.txt" />

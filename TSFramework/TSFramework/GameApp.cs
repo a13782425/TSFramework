@@ -190,7 +190,10 @@ namespace TSFrame
 
         private IResourcesLoader _resourcesLoader = null;
 
-        internal IResourcesLoader ResourcesLoader
+        /// <summary>
+        /// 资源加载器
+        /// </summary>
+        public IResourcesLoader ResourcesLoader
         {
             get
             {
@@ -353,6 +356,7 @@ namespace TSFrame
 
         private static List<ModuleDto> _moduleDtos = null;
 
+        private const string GameAssemblyFullName = "Assembly-CSharp";
         public GameApp Init()
         {
             _moduleDtos = new List<ModuleDto>();
@@ -368,16 +372,29 @@ namespace TSFrame
             Type moduleType = typeof(IModule);
             Type attrType = typeof(PriorityAttribute);
             Type resType = typeof(IResourcesLoader);
-            Assembly assembly = moduleType.Assembly;
-            Type[] types = assembly.GetTypes();
-            foreach (Type item in types)
+            List<Assembly> assemblieList = new List<Assembly>();
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly item in assemblies)
             {
-                if (!item.IsAbstract && moduleType.IsAssignableFrom(item))
+                if (item.GetName().Name == GameAssemblyFullName)
                 {
-                    //执行模块
-                    IModule module = Activator.CreateInstance(item) as IModule;
-                    int priority = GetPriority(item, attrType);
-                    _moduleDtos.Add(new ModuleDto() { Module = module, Priority = priority });
+                    assemblieList.Add(item);
+                    break;
+                }
+            }
+            assemblieList.Add(moduleType.Assembly);
+            foreach (var assembly in assemblieList)
+            {
+                Type[] types = assembly.GetTypes();
+                foreach (Type item in types)
+                {
+                    if (!item.IsAbstract && moduleType.IsAssignableFrom(item))
+                    {
+                        //执行模块
+                        IModule module = Activator.CreateInstance(item) as IModule;
+                        int priority = GetPriority(item, attrType);
+                        _moduleDtos.Add(new ModuleDto() { Module = module, Priority = priority });
+                    }
                 }
             }
             _moduleDtos.Sort((a, b) =>
@@ -428,7 +445,7 @@ namespace TSFrame
             object[] priorities = targetType.GetCustomAttributes(attrType, false);
             if (priorities == null || priorities.Length == 0)
             {
-                return int.MaxValue;
+                return 0;
             }
             PriorityAttribute priorityAttribute = priorities[0] as PriorityAttribute;
             return priorityAttribute.Priority;

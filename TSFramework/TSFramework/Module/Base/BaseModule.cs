@@ -25,6 +25,10 @@ namespace TSFrame.Module
             _gameObject = new UnityEngine.GameObject(this.GetType().Name);
             _gameObject.transform.SetParent(GameApp.Instance.transform);
             _instance = this as T;
+            if (_instance == null)
+            {
+                GameApp.Instance.LogError($"ModuleType:{this.GetType().Name},=== T Type:{typeof(T).Name}");
+            }
         }
         /// <summary>
         /// 初始化

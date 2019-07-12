@@ -28,7 +28,7 @@ internal static class ItemEditor
 
     internal static IniTool _iniTool = null;
 
-    [MenuItem("TSFrame/UI/生成Item", false, 1)]
+    [MenuItem("TSFrame/UI/生成Item #I", false, 1)]
     internal static void GenerateItem()
     {
         try

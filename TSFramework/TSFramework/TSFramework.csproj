@@ -50,7 +50,7 @@
     <Compile Include="Attribute\BindingAttribute.cs" />
     <Compile Include="Attribute\InjectAttribute.cs" />
     <Compile Include="Attribute\PriorityAttribute.cs" />
-    <Compile Include="Awake\AwakeExtensions.cs" />
+    <Compile Include="Await\AwaitExtensions.cs" />
     <Compile Include="DataBinding\Base\IBindingModel.cs" />
     <Compile Include="DataBinding\BindingCacheData.cs" />
     <Compile Include="DataBinding\Model\BindingModel.cs" />
@@ -64,6 +64,7 @@
     <Compile Include="Module\Base\IUILoader.cs" />
     <Compile Include="Module\DefaultResourcesModule.cs" />
     <Compile Include="Module\DefaultUIModule.cs" />
+    <Compile Include="Tool\ObjectPool.cs" />
     <Compile Include="Tool\Singleton.cs" />
     <Compile Include="UI\Base\IBindingElement.cs" />
     <Compile Include="DataBinding\Type\BindableProperty.cs" />

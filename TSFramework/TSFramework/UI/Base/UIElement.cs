@@ -45,6 +45,9 @@ namespace TSFrame.UI
         //protected List<UIElement> Childs => _childs;
         public HideFlags hideFlags { get => gameObject.hideFlags; set => gameObject.hideFlags = value; }
 
+        /// <summary>
+        /// 是否处于激活状态
+        /// </summary>
         public bool active
         {
             get => gameObject.activeInHierarchy;
@@ -54,13 +57,15 @@ namespace TSFrame.UI
                 gameObject.SetActive(value);
                 if (b != value)
                 {
-                    if (b)
+                    if (value)
                     {
-                        OnEnable();
+                        Internal_OnEnable();
+                        //OnEnable();
                     }
                     else
                     {
-                        OnDisable();
+                        Internal_OnDisable();
+                        //OnDisable();
                     }
                 }
             }
@@ -119,11 +124,16 @@ namespace TSFrame.UI
         #endregion
 
         #region public
-
+        /// <summary>
+        /// 加载场景时候不删除
+        /// </summary>
         public void DontDestroyOnLoad()
         {
             UnityEngine.Object.DontDestroyOnLoad(this.gameObject);
         }
+        /// <summary>
+        /// 关闭这个组件
+        /// </summary>
         public void Close()
         {
             Destroy(this);
@@ -137,15 +147,25 @@ namespace TSFrame.UI
         {
 
         }
-        //protected virtual void Update()
-        //{
-
-        //}
         protected virtual void OnDisable()
         {
 
         }
         protected virtual void OnDestroy()
+        {
+
+        }
+        /// <summary>
+        /// 内部显示调用方法
+        /// </summary>
+        internal virtual void Internal_OnEnable()
+        {
+
+        }
+        /// <summary>
+        /// 内部隐藏调用方法
+        /// </summary>
+        internal virtual void Internal_OnDisable()
         {
 
         }
@@ -185,7 +205,40 @@ namespace TSFrame.UI
 
         public T Element => _element;
 
+        private UIMono _currentMono = null;
 
+        private bool _enableDrag = false;
+        /// <summary>
+        /// 是否可以拖拽
+        /// </summary>
+        public bool EnableDrag { get { return _enableDrag; } set { _enableDrag = value; _currentMono.enableDrag = value; } }
+        /// <summary>
+        /// 开始拖拽
+        /// </summary>
+        public event Action<PointerEventData> onBeginDrag { add { _currentMono.onBeginDrag += value; } remove { _currentMono.onBeginDrag -= value; } }
+        /// <summary>
+        /// 拖拽中
+        /// </summary>
+        public event Action<PointerEventData> onDrag { add { _currentMono.onDrag += value; } remove { _currentMono.onDrag -= value; } }
+        /// <summary>
+        /// 停止拖拽
+        /// </summary>
+        public event Action<PointerEventData> onEndDrag { add { _currentMono.onEndDrag += value; } remove { _currentMono.onBeginDrag -= value; } }
+
+
+        private bool _enableEnter = false;
+        /// <summary>
+        /// 是否启用进入退出
+        /// </summary>
+        public bool EnableEnter { get { return _enableEnter; } set { _enableEnter = value; _currentMono.enableEnter = value; } }
+        /// <summary>
+        /// 光标进入
+        /// </summary>
+        public event Action<PointerEventData> onEnter { add { _currentMono.onEndDrag += value; } remove { _currentMono.onBeginDrag -= value; } }
+        /// <summary>
+        /// 光标退出
+        /// </summary>
+        public event Action<PointerEventData> onExit { add { _currentMono.onEndDrag += value; } remove { _currentMono.onBeginDrag -= value; } }
 
         internal UIElement(UIView uIView, T element) : base(element.gameObject)
         {
@@ -195,13 +248,58 @@ namespace TSFrame.UI
             }
             _uiView = uIView;
             _element = element;
-            UIMono uIMono = this.gameObject.AddComponent<UIMono>();
-            uIMono.Init(this);
+            _currentMono = this.gameObject.AddComponent<UIMono>();
+            _currentMono.Init(this);
         }
     }
-    class UIMono : MonoBehaviour
+
+    class UIMono : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler
     {
         private UIElement _uIElement = null;
+
+        internal bool enableDrag = false;
+        internal bool enableEnter = false;
+        internal event Action<PointerEventData> onBeginDrag;
+        internal event Action<PointerEventData> onDrag;
+        internal event Action<PointerEventData> onEndDrag;
+        internal event Action<PointerEventData> onEnter;
+        internal event Action<PointerEventData> onExit;
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (!enableDrag)
+                return;
+            onBeginDrag?.Invoke(eventData);
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            if (!enableDrag)
+                return;
+            onDrag?.Invoke(eventData);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (!enableDrag)
+                return;
+            onEndDrag?.Invoke(eventData);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (!enableEnter)
+                return;
+            onEnter?.Invoke(eventData);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (!enableEnter)
+                return;
+            onExit?.Invoke(eventData);
+        }
+
         internal void Init<T>(UIElement<T> uIElement) where T : UIBehaviour
         {
             _uIElement = uIElement;
