@@ -28,7 +28,7 @@ internal static class ItemEditor
 
     internal static IniTool _iniTool = null;
 
-    [MenuItem("TSFrame/UI/生成Item #I", false, 1)]
+    [MenuItem("SSFrame/UI/生成Item #I", false, 1)]
     internal static void GenerateItem()
     {
         try
@@ -45,6 +45,7 @@ internal static class ItemEditor
                 Directory.CreateDirectory(_itemCodePath);
             }
             EditorUtility.DisplayProgressBar("生成Item", "正在生成Item", 0);
+            UIEditorUtils.ErrorList = new List<string>();
             Thread.Sleep(200);
             string[] strs = Directory.GetFiles(Path.Combine(Application.dataPath, _itemUIPath), "*.prefab");
             float length = strs.Length;
@@ -63,6 +64,13 @@ internal static class ItemEditor
             EditorUtility.DisplayProgressBar("生成Item", "生成Item完成", 1);
             Thread.Sleep(200);
             EditorUtility.ClearProgressBar();
+            if (UIEditorUtils.ErrorList.Count > 0)
+            {
+                foreach (var item in UIEditorUtils.ErrorList)
+                {
+                    EditorUtility.DisplayDialog("警告", item, "OK");
+                }
+            }
             AssetDatabase.Refresh();
         }
         catch (Exception ex)
@@ -107,10 +115,10 @@ internal static class ItemEditor
     //    }
     //    else
     //    {
-    //        Type type = typeof(TSFrame.MVVM.BindableProperty<>);
+    //        Type type = typeof(SSFrame.MVVM.BindableProperty<>);
     //        Type interfaceType = type.GetInterfaces()[0];
-    //        Type bindType = typeof(TSFrame.BindingAttribute);
-    //        Type elementType = typeof(TSFrame.UI.IElement);
+    //        Type bindType = typeof(SSFrame.BindingAttribute);
+    //        Type elementType = typeof(SSFrame.UI.IElement);
     //        StringBuilder stringBuilder = new StringBuilder();
     //        FieldInfo[] panelFieldInfos = panelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
     //        FieldInfo[] injectFieldInfos = _injectModelField.FieldType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -134,22 +142,22 @@ internal static class ItemEditor
     //                            element = element.Substring(index, element.Length - index);
     //                            if (element.ToLower() == injectFieldName.ToLower())
     //                            {
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWay) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OneWay) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWay);");
     //                                    stringBuilder.AppendLine();
     //                                }
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWayToSource) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OneWayToSource) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWayToSource);");
     //                                    stringBuilder.AppendLine();
     //                                }
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OnTime) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OnTime) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.OnTime);");
     //                                    stringBuilder.AppendLine();
     //                                }
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.TwoWay) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.TwoWay) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.TwoWay);");
     //                                    stringBuilder.AppendLine();

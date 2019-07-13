@@ -30,7 +30,7 @@ internal static class PanelEditor
 
     //internal static FieldInfo _injectModelField = null;
 
-    [MenuItem("TSFrame/UI/生成Panel #P", false, 0)]
+    [MenuItem("SSFrame/UI/生成Panel #P", false, 0)]
     internal static void GeneratePanel()
     {
         try
@@ -47,6 +47,7 @@ internal static class PanelEditor
                 Directory.CreateDirectory(_panelCodePath);
             }
             EditorUtility.DisplayProgressBar("生成Panel", "正在生成Panel", 0);
+            UIEditorUtils.ErrorList = new List<string>();
             Thread.Sleep(200);
             string[] strs = Directory.GetFiles(Path.Combine(Application.dataPath, _panelUIPath), "*.prefab");
             float length = strs.Length;
@@ -66,6 +67,13 @@ internal static class PanelEditor
             EditorUtility.DisplayProgressBar("生成Panel", "生成Panel完成", 1);
             Thread.Sleep(200);
             EditorUtility.ClearProgressBar();
+            if (UIEditorUtils.ErrorList.Count > 0)
+            {
+                foreach (var item in UIEditorUtils.ErrorList)
+                {
+                    EditorUtility.DisplayDialog("警告", item, "OK");
+                }
+            }
             AssetDatabase.Refresh();
         }
         catch (Exception ex)
@@ -113,10 +121,10 @@ internal static class PanelEditor
     //    }
     //    else
     //    {
-    //        Type type = typeof(TSFrame.MVVM.BindableProperty<>);
+    //        Type type = typeof(SSFrame.MVVM.BindableProperty<>);
     //        Type interfaceType = type.GetInterfaces()[0];
-    //        Type bindType = typeof(TSFrame.BindingAttribute);
-    //        Type elementType = typeof(TSFrame.UI.IElement);
+    //        Type bindType = typeof(SSFrame.BindingAttribute);
+    //        Type elementType = typeof(SSFrame.UI.IElement);
     //        StringBuilder stringBuilder = new StringBuilder();
     //        FieldInfo[] panelFieldInfos = panelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
     //        FieldInfo[] injectFieldInfos = _injectField.FieldType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -140,22 +148,22 @@ internal static class PanelEditor
     //                            string tempElement = element.Substring(index, element.Length - index);
     //                            if (tempElement.ToLower() == injectFieldName.ToLower())
     //                            {
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWay) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OneWay) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWay);");
     //                                    stringBuilder.AppendLine();
     //                                }
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWayToSource) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OneWayToSource) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWayToSource);");
     //                                    stringBuilder.AppendLine();
     //                                }
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OnTime) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OnTime) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectField.Name}.{injectFieldName}, this.{element}, BindingMode.OnTime);");
     //                                    stringBuilder.AppendLine();
     //                                }
-    //                                if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.TwoWay) > 0)
+    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.TwoWay) > 0)
     //                                {
     //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectField.Name}.{injectFieldName}, this.{element}, BindingMode.TwoWay);");
     //                                    stringBuilder.AppendLine();

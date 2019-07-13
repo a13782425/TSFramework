@@ -7,11 +7,21 @@ using TSFrame.UI;
 
 namespace TSFrame.MVVM
 {
+    /// <summary>
+    /// 绑定数据类型
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public sealed class BindableProperty<T> : IBindableProperty
     {
         private Action<T, T> _onValueChanged;
 
         private Action<object> _onObjValueChanged;
+
+        private bool _isEnable = true;
+        /// <summary>
+        /// 是否启动绑定数据
+        /// </summary>
+        public bool IsEnable { get => _isEnable; set => _isEnable = value; }
 
         private T _value;
         public T Value
@@ -26,7 +36,10 @@ namespace TSFrame.MVVM
                 {
                     T old = _value;
                     _value = value;
-                    ValueChanged(old, _value);
+                    if (IsEnable)
+                    {
+                        ValueChanged(old, _value);
+                    }
                 }
             }
         }
@@ -47,6 +60,7 @@ namespace TSFrame.MVVM
         {
             return (Value != null ? Value.ToString() : "null");
         }
+
 
         public void Freed()
         {

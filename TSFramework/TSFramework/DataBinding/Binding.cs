@@ -13,11 +13,11 @@ namespace TSFrame.MVVM
     {
         #region variable
 
-        private IDisposable _sourceData = null;
+        private IBindingModel _sourceData = null;
         /// <summary>
         /// 当前绑定的数据
         /// </summary>
-        public IDisposable SourceData { get => _sourceData; set { SourceDataChange(value); } }
+        public IBindingModel SourceData { get => _sourceData; set { SourceDataChange(value); } }
 
         /// <summary>
         /// 绑定数据对应绑定模式缓存
@@ -278,14 +278,14 @@ namespace TSFrame.MVVM
             }
             if (this.SourceData != null)
             {
-                this.SourceData.Dispose();
+                this.SourceData.Free();
             }
         }
 
         /// <summary>
         /// 源数据改变回调
         /// </summary>
-        private void SourceDataChange(IDisposable data)
+        private void SourceDataChange(IBindingModel data)
         {
             if (data == null)
             {
@@ -312,6 +312,7 @@ namespace TSFrame.MVVM
                 }
             }
             _sourceData = data;
+            _sourceData.Init();
             foreach (KeyValuePair<string, BindPropertyData> item in _bindPropertyDic)
             {
                 item.Value.SetValue(BindingMode.OnTime);
@@ -408,7 +409,14 @@ namespace TSFrame.MVVM
             /// <param name="bindingMode"></param>
             public void SetValue(BindingMode bindingMode)
             {
-                SetValue(bindingMode, _bindableProperty.GetValue());
+                try
+                {
+                    SetValue(bindingMode, _bindableProperty.GetValue());
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{_currentBinding.SourceData.GetType().Name} 中绑定数据字段：{FieldName} 不存在！");
+                }
             }
             /// <summary>
             /// 设置Value

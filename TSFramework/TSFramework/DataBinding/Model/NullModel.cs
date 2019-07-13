@@ -10,7 +10,9 @@ namespace TSFrame.MVVM
     /// <summary>
     /// 空绑定Model
     /// </summary>
-    public sealed class NullModel : BindingModel
+    public sealed class NullModel : IBindingModel
     {
+        public void Init() { }
+        public void Free() { }
     }
 }

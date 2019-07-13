@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace TSFrame.MVVM
 {
-    public abstract class BindingModel : IBindingModel
-    {
+    //public abstract class BindingModel : IBindingModel
+    //{
 
-        public BindingModel()
-        {
-            FieldInfo[] fieldInfos= this.GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-        }
-    }
+    //    public BindingModel()
+    //    {
+    //        FieldInfo[] fieldInfos= this.GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+    //    }
+    //}
 }

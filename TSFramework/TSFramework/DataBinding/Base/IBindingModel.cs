@@ -6,5 +6,18 @@ using System.Threading.Tasks;
 
 namespace TSFrame.MVVM
 {
-    internal interface IBindingModel { }
+    /// <summary>
+    /// 绑定数据接口
+    /// </summary>
+    public interface IBindingModel
+    {
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        void Init();
+        /// <summary>
+        /// 释放
+        /// </summary>
+        void Free();
+    }
 }

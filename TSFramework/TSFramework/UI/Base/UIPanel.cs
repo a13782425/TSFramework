@@ -16,28 +16,6 @@ namespace TSFrame.UI
         public virtual UILayerEnum LayerEnum => UILayerEnum.Normal;
 
         private bool _useItemPool = false;
-        /// <summary>
-        /// 使用Item对象池
-        /// </summary>
-        protected bool UseItemPool
-        {
-            get => _useItemPool;
-            set
-            {
-                if (_useItemPool == value)
-                {
-                    return;
-                }
-                if (!value)
-                {
-                    //取消使用对象池
-                }
-                else
-                {
-                    //启用对象池
-                }
-            }
-        }
 
         protected UIPanel() : base()
         {

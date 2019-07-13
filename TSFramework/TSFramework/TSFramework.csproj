@@ -75,6 +75,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Base\UIElement.cs" />
     <Compile Include="UI\Base\UIItem.cs" />
+    <Compile Include="UI\Base\UIMono.cs" />
     <Compile Include="UI\Base\UIPanel.cs" />
     <Compile Include="UI\Base\UIView.cs" />
     <Compile Include="UI\Element\UIButton.cs" />

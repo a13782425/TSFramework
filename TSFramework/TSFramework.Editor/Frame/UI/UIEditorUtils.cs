@@ -19,6 +19,7 @@ internal static class UIEditorUtils
     internal const string GAME_ASSEMBLY_FULLNAME = "Assembly-CSharp";
     internal const int RESOURCES_LENGTH = 10;
     internal readonly static Type _interfaceType = typeof(IElement);
+    internal static List<string> ErrorList = new List<string>();
     public static Dictionary<string, string> MVVMTypeDic = new Dictionary<string, string>()
     {
         {"Button", "UIButton" },
@@ -116,8 +117,10 @@ internal static class UIEditorUtils
         }
         else
         {
+            object modelObj = Activator.CreateInstance(modelField.FieldType);
             Type type = typeof(TSFrame.MVVM.BindableProperty<>);
             Type interfaceType = type.GetInterfaces()[0];
+            FieldInfo nameField = interfaceType.GetField("Name");
             Type bindType = typeof(TSFrame.BindingAttribute);
             Type elementType = typeof(TSFrame.UI.IElement);
             StringBuilder stringBuilder = new StringBuilder();
@@ -127,12 +130,16 @@ internal static class UIEditorUtils
             {
                 if (interfaceType.IsAssignableFrom(item.FieldType))
                 {
+                    string interfaceName = nameField.GetValue(item.GetValue(modelObj)).ToString();
                     object[] objs = item.GetCustomAttributes(bindType, false);
                     if (objs.Length == 1)
                     {
                         BindingAttribute bindingAttribute = objs[0] as BindingAttribute;
                         string injectFieldName = item.Name;
-
+                        if (interfaceName != injectFieldName)
+                        {
+                            ErrorList.Add($"{modelField.FieldType.Name}数据类中字段：{injectFieldName}和配置名：{interfaceName}不一致");
+                        }
                         foreach (var panelFieldInfo in panelFieldInfos)
                         {
                             if (elementType.IsAssignableFrom(panelFieldInfo.FieldType))
@@ -140,8 +147,8 @@ internal static class UIEditorUtils
                                 string element = panelFieldInfo.Name;
                                 int index = element.IndexOf('_');
                                 index++;
-                                string tempElement = element.Substring(index, element.Length - index);
-                                if (tempElement.ToLower() == injectFieldName.ToLower())
+                                string tempElementName = element.Substring(index, element.Length - index);
+                                if (tempElementName.ToLower() == injectFieldName.ToLower())
                                 {
                                     if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWay) > 0)
                                     {

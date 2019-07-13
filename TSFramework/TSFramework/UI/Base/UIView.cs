@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TSFrame.MVVM;
 using UnityEngine;
@@ -30,10 +31,16 @@ namespace TSFrame.UI
         private readonly Dictionary<int, UIElement> _uiElementDic;
         private Binding _bindingContext = null;
 
+        /// <summary>
+        /// 绑定上下文
+        /// </summary>
         public Binding BindingContext { get => _bindingContext; }
 
-        private List<Coroutine> _coroutinesList = new List<Coroutine>();
-
+        /// <summary>
+        /// 任务工厂
+        /// </summary>
+        private TaskFactory _taskFactory = null;
+        private CancellationTokenSource _cancellationTokenSource = null;
         protected UIView() : base()
         {
             _uiElementDic = new Dictionary<int, UIElement>();
@@ -78,33 +85,36 @@ namespace TSFrame.UI
 
         protected override void OnDestroy()
         {
-            _bindingContext.UnbindAll();
-            _bindingContext = null;
-        }
 
-        internal override void Internal_OnEnable()
-        {
-            foreach (var item in _uiElementDic)
-            {
-                item.Value.Internal_OnEnable();
-            }
-            this.OnEnable();
-            this.BindingContext.active = true;
-        }
-
-        internal override void Internal_OnDisable()
-        {
-            this.BindingContext.active = false;
-            foreach (var item in _uiElementDic)
-            {
-                item.Value.Internal_OnDisable();
-            }
-            this.OnDisable();
         }
 
         #endregion
 
+        #region internal
+
+
+
+        #endregion
+
         #region protected
+
+        /// <summary>
+        /// 启动一个任务
+        /// </summary>
+        protected void StartTask(Action action)
+        {
+            CheckTaskFactory();
+            _taskFactory.StartNew(action, _cancellationTokenSource.Token);
+        }
+        /// <summary>
+        /// 启动一个任务
+        /// </summary>
+        protected void StartTask(Action<object> action, object data)
+        {
+            CheckTaskFactory();
+            _taskFactory.StartNew(action, data, _cancellationTokenSource.Token);
+        }
+
         /// <summary>
         /// 启动协程
         /// </summary>
@@ -159,6 +169,10 @@ namespace TSFrame.UI
         {
             this.UIElementDic.Add(element.InstanceId, element);
         }
+        /// <summary>
+        /// 删除一个组件
+        /// </summary>
+        /// <param name="uIElement"></param>
         internal void RemoveElement(UIElement uIElement)
         {
             if (UIElementDic.ContainsKey(uIElement.InstanceId))
@@ -166,6 +180,11 @@ namespace TSFrame.UI
                 UIElementDic.Remove(uIElement.InstanceId);
             }
         }
+        /// <summary>
+        /// 获取一个组件
+        /// </summary>
+        /// <param name="instanceId"></param>
+        /// <returns></returns>
         internal IBindingElement GetBindingElement(int instanceId)
         {
             if (UIElementDic.ContainsKey(instanceId))
@@ -174,12 +193,58 @@ namespace TSFrame.UI
             }
             return null;
         }
-
+        internal override void Internal_OnDestroy()
+        {
+            if (_taskFactory != null)
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            List<int> keys = UIElementDic.Keys.ToList();
+            foreach (var item in keys)
+            {
+                if (UIElementDic.ContainsKey(item))
+                {
+                    UIElementDic[item].Internal_OnDestroy();
+                }
+            }
+            this.OnDestroy();
+            UIElementDic.Clear();
+            _bindingContext.UnbindAll();
+            _bindingContext = null;
+        }
+        internal override void Internal_OnEnable()
+        {
+            foreach (var item in UIElementDic)
+            {
+                item.Value.active = true;
+            }
+            this.OnEnable();
+            this.BindingContext.active = true;
+        }
+        internal override void Internal_OnDisable()
+        {
+            this.BindingContext.active = false;
+            foreach (var item in UIElementDic)
+            {
+                item.Value.active = false;
+                //item.Value.Internal_OnDisable();
+            }
+            this.OnDisable();
+        }
         private void Initialize(Transform parent)
         {
             GameObject obj = GameApp.Instance.ResourcesLoader.Load<GameObject>(UIPath);
             _gameObject = GameObject.Instantiate(obj, parent);
             _rectTransform = _gameObject.GetComponent<RectTransform>();
+        }
+
+        private void CheckTaskFactory()
+        {
+            if (_taskFactory == null)
+            {
+                _cancellationTokenSource = new CancellationTokenSource();
+                _taskFactory = new TaskFactory(_cancellationTokenSource.Token);
+            }
         }
         #endregion
 
