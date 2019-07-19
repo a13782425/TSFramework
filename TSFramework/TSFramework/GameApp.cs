@@ -11,6 +11,9 @@ using Object = UnityEngine.Object;
 
 namespace TSFrame
 {
+    /// <summary>
+    /// 游戏全局总入口
+    /// </summary>
     public sealed class GameApp
     {
 
@@ -64,17 +67,6 @@ namespace TSFrame
             }
             Object.Destroy(gameObject);
         }
-
-        /// <summary>
-        /// 启动协程
-        /// </summary>
-        /// <param name="routine"></param>
-        /// <returns></returns>
-        public Coroutine StartCoroutine(IEnumerator routine)
-        {
-            return _gameMono.StartCoroutine(routine);
-        }
-
         /// <summary>
         /// 启动协程
         /// </summary>
@@ -86,6 +78,16 @@ namespace TSFrame
             coroutine = _gameMono.StartCoroutine(routine);
             return this;
         }
+        /// <summary>
+        /// 启动协程
+        /// </summary>
+        /// <param name="routine"></param>
+        /// <returns></returns>
+        public Coroutine StartCoroutine(IEnumerator routine)
+        {
+            return _gameMono.StartCoroutine(routine);
+        }
+
         /// <summary>
         /// 停止协程
         /// </summary>
@@ -226,12 +228,37 @@ namespace TSFrame
 
         #endregion
 
+        #region Setting
+
+        /// <summary>
+        /// 是否是刘海屏
+        /// </summary>
+        /// <param name="isNotchScreen"></param>
+        /// <returns></returns>
+        public GameApp SetNotchScreen(bool isNotchScreen)
+        {
+            GameSetting.IsNotchScreen = isNotchScreen;
+            return this;
+        }
+        /// <summary>
+        /// 设置UI安全区域
+        /// </summary>
+        /// <param name="safeArea"></param>
+        /// <returns></returns>
+        public GameApp SetSafeArea(Vector2 safeArea)
+        {
+            GameSetting.SafeArea = safeArea;
+            return this;
+        }
+
+        #endregion
+
         #region UI
 
 
         private IUILoader _uiLoader = null;
 
-        internal IUILoader UILoader
+        public IUILoader UILoader
         {
             get
             {
@@ -357,6 +384,10 @@ namespace TSFrame
         private static List<ModuleDto> _moduleDtos = null;
 
         private const string GameAssemblyFullName = "Assembly-CSharp";
+        /// <summary>
+        /// 初始化框架
+        /// </summary>
+        /// <returns></returns>
         public GameApp Init()
         {
             _moduleDtos = new List<ModuleDto>();

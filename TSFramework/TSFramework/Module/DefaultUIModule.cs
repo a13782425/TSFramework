@@ -56,10 +56,23 @@ namespace TSFrame.Module
                 GameObject obj = new GameObject(uILayerEnum.ToString(), typeof(RectTransform));
                 obj.transform.SetParent(MainUIObj.transform);
                 RectTransform rectTransform = obj.GetComponent<RectTransform>();
+
                 rectTransform.anchorMin = Vector2.zero;
                 rectTransform.anchorMax = Vector2.one;
-                rectTransform.offsetMax = Vector2.zero;
-                rectTransform.offsetMin = Vector2.zero;
+                if (GameSetting.IsNotchScreen)
+                {
+                    float width = Screen.width;
+                    float height = Screen.height;
+                    float offsetY = (height - GameSetting.SafeArea.y) / 2f;
+                    float offsetX = (width - GameSetting.SafeArea.x) / 2f;
+                    rectTransform.offsetMax = new Vector2(offsetX, offsetY);
+                    rectTransform.offsetMin = new Vector2(offsetX * -1, offsetY * -1);
+                }
+                else
+                {
+                    rectTransform.offsetMax = Vector2.zero;
+                    rectTransform.offsetMin = Vector2.zero;
+                }
                 rectTransform.SetSiblingIndex((int)uILayerEnum);
                 _tranDic.Add(uILayerEnum, rectTransform);
             }
@@ -90,6 +103,24 @@ namespace TSFrame.Module
             else
             {
                 panel.active = true;
+            }
+            return panel as T;
+        }
+
+        public T GetPanel<T>() where T : UIPanel, new()
+        {
+            UIPanel panel = null;
+            foreach (var item in _panelList)
+            {
+                if (item is T)
+                {
+                    panel = item;
+                    break;
+                }
+            }
+            if (panel == null)
+            {
+                panel = CreatePanel<T>();
             }
             return panel as T;
         }

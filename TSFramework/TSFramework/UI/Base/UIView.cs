@@ -87,6 +87,50 @@ namespace TSFrame.UI
         {
 
         }
+        internal override void Internal_OnDestroy()
+        {
+            if (_taskFactory != null)
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            List<int> keys = UIElementDic.Keys.ToList();
+            foreach (var item in keys)
+            {
+                if (UIElementDic.ContainsKey(item))
+                {
+                    UIElementDic[item].Internal_OnDestroy();
+                }
+            }
+            this.OnDestroy();
+            UIElementDic.Clear();
+            _bindingContext.UnbindAll();
+            _bindingContext = null;
+        }
+        internal override void Internal_OnEnable()
+        {
+            foreach (var item in UIElementDic)
+            {
+                if (item.Value.active)
+                {
+                    item.Value.Internal_OnEnable();
+                }
+            }
+            this.OnEnable();
+            this.BindingContext.active = true;
+        }
+        internal override void Internal_OnDisable()
+        {
+            this.BindingContext.active = false;
+            foreach (var item in UIElementDic)
+            {
+                if (item.Value.active)
+                {
+                    item.Value.Internal_OnDisable();
+                }
+                //item.Value.active = false;
+            }
+            this.OnDisable();
+        }
 
         #endregion
 
@@ -193,44 +237,7 @@ namespace TSFrame.UI
             }
             return null;
         }
-        internal override void Internal_OnDestroy()
-        {
-            if (_taskFactory != null)
-            {
-                _cancellationTokenSource.Cancel();
-            }
-            List<int> keys = UIElementDic.Keys.ToList();
-            foreach (var item in keys)
-            {
-                if (UIElementDic.ContainsKey(item))
-                {
-                    UIElementDic[item].Internal_OnDestroy();
-                }
-            }
-            this.OnDestroy();
-            UIElementDic.Clear();
-            _bindingContext.UnbindAll();
-            _bindingContext = null;
-        }
-        internal override void Internal_OnEnable()
-        {
-            foreach (var item in UIElementDic)
-            {
-                item.Value.active = true;
-            }
-            this.OnEnable();
-            this.BindingContext.active = true;
-        }
-        internal override void Internal_OnDisable()
-        {
-            this.BindingContext.active = false;
-            foreach (var item in UIElementDic)
-            {
-                item.Value.active = false;
-                //item.Value.Internal_OnDisable();
-            }
-            this.OnDisable();
-        }
+
         private void Initialize(Transform parent)
         {
             GameObject obj = GameApp.Instance.ResourcesLoader.Load<GameObject>(UIPath);

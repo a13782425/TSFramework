@@ -57,7 +57,7 @@ namespace TSFrame.UI
 
         public void SetValue(object value)
         {
-            string str = value.ToString();
+            string str = value == null ? "" : value.ToString();
             if (str != text)
             {
                 text = str;

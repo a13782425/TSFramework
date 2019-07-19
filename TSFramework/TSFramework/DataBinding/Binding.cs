@@ -278,7 +278,7 @@ namespace TSFrame.MVVM
             }
             if (this.SourceData != null)
             {
-                this.SourceData.Free();
+                this.SourceData.Dispose();
             }
         }
 
@@ -312,10 +312,10 @@ namespace TSFrame.MVVM
                 }
             }
             _sourceData = data;
-            _sourceData.Init();
             foreach (KeyValuePair<string, BindPropertyData> item in _bindPropertyDic)
             {
                 item.Value.SetValue(BindingMode.OnTime);
+                item.Value.SetValue(BindingMode.OneWay);
             }
         }
 
@@ -415,7 +415,8 @@ namespace TSFrame.MVVM
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{_currentBinding.SourceData.GetType().Name} 中绑定数据字段：{FieldName} 不存在！");
+                    GameApp.Instance.LogError(ex.Message);
+                    GameApp.Instance.LogError($"猜测错误：{_currentBinding.SourceData.GetType().Name} 中绑定数据字段：{FieldName} 不存在！");
                 }
             }
             /// <summary>

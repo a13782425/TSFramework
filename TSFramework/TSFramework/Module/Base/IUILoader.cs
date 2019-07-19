@@ -15,15 +15,18 @@ namespace TSFrame.Module
         /// 如果parent == null,则按照UILayerEnum进行排序
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="parent"></param>
         /// <returns></returns>
         T CreatePanel<T>() where T : UIPanel, new();
         /// <summary>
         /// 显示一个Panel，如果没有则创建，如果有则显示
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="parent"></param>
         T ShowPanel<T>() where T : UIPanel, new();
+        /// <summary>
+        /// 获取一个Panel，如果没有则创建，如果有则返回（不会改变其状态）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        T GetPanel<T>() where T : UIPanel, new();
         /// <summary>
         /// 隐藏一个Panel
         /// </summary>
@@ -41,6 +44,11 @@ namespace TSFrame.Module
         /// <typeparam name="T"></typeparam>
         void ClosePanel<T>() where T : UIPanel, new();
 
+        /// <summary>
+        /// 根据层级获取父物体
+        /// </summary>
+        /// <param name="uILayerEnum"></param>
+        /// <returns></returns>
         Transform GetParent(UILayerEnum uILayerEnum);
     }
 }

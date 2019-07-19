@@ -15,14 +15,27 @@ using static UnityEngine.Application;
 namespace TSFrame
 {
     /// <summary>
-    /// 将多线程上的方法在下一帧放在主线程上
+    /// 等待一帧
     /// </summary>
-    public class WaitForUpdate : CustomYieldInstruction
+    public class WaitForUpdate
+    {
+        /// <summary>
+        /// 等待一帧
+        /// </summary>
+        public WaitForUpdate() { }
+
+    }
+
+    /// <summary>
+    /// 将多线程上的方法在下一帧放在Unity线程上
+    /// 此方法仅是把代码放在Unity线程上执行，没有任何等待
+    /// </summary>
+    public class WaitForUnityThread : CustomYieldInstruction
     {
         /// <summary>
         /// 将多线程上的方法在下一帧放在主线程上
         /// </summary>
-        public WaitForUpdate() : base() { }
+        public WaitForUnityThread() : base() { }
 
         public override bool keepWaiting
         {
@@ -32,6 +45,7 @@ namespace TSFrame
 
     /// <summary>
     /// 将主线程上的方法在下一帧放在多线程上执行
+    /// 此方法仅是把代码放在多线程上执行，没有任何等待
     /// </summary>
     public class WaitForBackgroundThread
     {
@@ -218,6 +232,10 @@ namespace TSFrame
             awaiter.Complete(null);
             return awaiter;
         }
+        public static UnityAwaiter GetAwaiter(this WaitForUpdate waitForUpdate)
+        {
+            return GetAwaiterReturnVoid(null);
+        }
 
         public static UnityAwaiter GetAwaiter<T>(this WaitForAction<T> waitForAction)
         {
@@ -230,6 +248,7 @@ namespace TSFrame
             return awaiter;
         }
 
+
         public static UnityAwaiter<T> GetAwaiter<T>(this WaitForFunc<T> waitForFunc)
         {
             var awaiter = new UnityAwaiter<T>();
@@ -238,6 +257,11 @@ namespace TSFrame
                 RunOnUnityScheduler(() => AsyncCoroutineRunner.Instance.StartCoroutine(InstructionWrappers.FuncGetReturn<T>(awaiter, waitForFunc.GetFunc())));
             }
             return awaiter;
+        }
+
+        public static TaskAwaiter GetAwaiter(this TimeSpan timeSpan)
+        {
+            return Task.Delay(timeSpan).GetAwaiter();
         }
 
         /// <summary>
@@ -276,25 +300,25 @@ namespace TSFrame
             yield return task.Result;
         }
 
-        public static Task StartTask(this MonoBehaviour mono, Action action)
-        {
-            return Task.Factory.StartNew(action);
-        }
+        //public static Task StartTask(this MonoBehaviour mono, Action action)
+        //{
+        //    return Task.Factory.StartNew(action);
+        //}
 
-        public static Task StartTask(this MonoBehaviour mono, Action<object> action, object data)
-        {
-            return Task.Factory.StartNew(action, data);
-        }
+        //public static Task StartTask(this MonoBehaviour mono, Action<object> action, object data)
+        //{
+        //    return Task.Factory.StartNew(action, data);
+        //}
 
-        public static Task<T> StartTask<T>(this MonoBehaviour mono, Func<T> action)
-        {
-            return Task.Factory.StartNew<T>(action);
-        }
+        //public static Task<T> StartTask<T>(this MonoBehaviour mono, Func<T> action)
+        //{
+        //    return Task.Factory.StartNew<T>(action);
+        //}
 
-        public static Task<T> StartTask<T>(this MonoBehaviour mono, Func<object, T> action, object data)
-        {
-            return Task.Factory.StartNew<T>(action, data);
-        }
+        //public static Task<T> StartTask<T>(this MonoBehaviour mono, Func<object, T> action, object data)
+        //{
+        //    return Task.Factory.StartNew<T>(action, data);
+        //}
 
         /// <summary>
         /// 断言
@@ -645,11 +669,6 @@ namespace TSFrame
         {
             gameObject.hideFlags = HideFlags.HideAndDontSave;
             DontDestroyOnLoad(gameObject);
-        }
-
-        private void OnApplicationQuit()
-        {
-            Task.Factory.CancellationToken.WaitHandle.Close();
         }
     }
 

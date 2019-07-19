@@ -99,6 +99,8 @@ namespace TSFrame.UI
                     return new UIToggle(uIView, toggle) as T;
                 case Slider slider:
                     return new UISlider(uIView, slider) as T;
+                case Scrollbar scrollbar:
+                    return new UIScrollbar(uIView, scrollbar) as T;
                 default:
                     break;
             }

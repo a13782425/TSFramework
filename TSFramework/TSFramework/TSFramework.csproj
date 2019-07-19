@@ -56,6 +56,7 @@
     <Compile Include="DataBinding\Model\BindingModel.cs" />
     <Compile Include="DataBinding\Type\BindableList.cs" />
     <Compile Include="GameApp.cs" />
+    <Compile Include="GameSetting.cs" />
     <Compile Include="Log\DefaultLogger.cs" />
     <Compile Include="Log\ILogger.cs" />
     <Compile Include="Module\Base\BaseModule.cs" />

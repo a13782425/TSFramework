@@ -120,7 +120,7 @@ internal static class UIEditorUtils
             object modelObj = Activator.CreateInstance(modelField.FieldType);
             Type type = typeof(TSFrame.MVVM.BindableProperty<>);
             Type interfaceType = type.GetInterfaces()[0];
-            FieldInfo nameField = interfaceType.GetField("Name");
+            PropertyInfo nameProp = interfaceType.GetProperty("name", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             Type bindType = typeof(TSFrame.BindingAttribute);
             Type elementType = typeof(TSFrame.UI.IElement);
             StringBuilder stringBuilder = new StringBuilder();
@@ -130,10 +130,12 @@ internal static class UIEditorUtils
             {
                 if (interfaceType.IsAssignableFrom(item.FieldType))
                 {
-                    string interfaceName = nameField.GetValue(item.GetValue(modelObj)).ToString();
                     object[] objs = item.GetCustomAttributes(bindType, false);
                     if (objs.Length == 1)
                     {
+                        object tempName = nameProp.GetValue(item.GetValue(modelObj));
+                        string interfaceName = tempName == null ? null : tempName.ToString();
+
                         BindingAttribute bindingAttribute = objs[0] as BindingAttribute;
                         string injectFieldName = item.Name;
                         if (interfaceName != injectFieldName)

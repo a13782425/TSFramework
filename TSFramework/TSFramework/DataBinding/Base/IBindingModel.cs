@@ -9,15 +9,11 @@ namespace TSFrame.MVVM
     /// <summary>
     /// 绑定数据接口
     /// </summary>
-    public interface IBindingModel
+    public interface IBindingModel : IDisposable
     {
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        void Init();
-        /// <summary>
-        /// 释放
-        /// </summary>
-        void Free();
+        ///// <summary>
+        ///// 初始化
+        ///// </summary>
+        //void Init();
     }
 }

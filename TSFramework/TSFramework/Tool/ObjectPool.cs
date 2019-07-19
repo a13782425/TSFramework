@@ -75,6 +75,7 @@ namespace TSFrame
             }
             if (_poolDic.ContainsKey(poolName))
             {
+                GameApp.Instance.LogError($"对象池:{poolName} 已存在");
                 return _poolDic[poolName] as PoolData<T>;
             }
             PoolData<T> pool = new PoolData<T>(poolName, createNew, recoveAction, destroyAciton, initCount);
@@ -103,6 +104,10 @@ namespace TSFrame
                 IPoolData pool = _poolDic[poolName];
                 _poolDic.Remove(poolName);
                 pool.Destroy();
+            }
+            else
+            {
+                GameApp.Instance.LogError($"对象池:{poolName} 不存在");
             }
 
             return this;
@@ -151,6 +156,7 @@ namespace TSFrame
             if (_poolDic.ContainsKey(poolName))
             {
                 _poolDic[poolName].Recove(obj);
+                return;
             }
             GameApp.Instance.LogError($"对象池:{poolName} 不存在");
         }
@@ -196,7 +202,6 @@ namespace TSFrame
             internal PoolData(string name, Func<T> createNew, Action<T, Transform> recoveAction, Action<T> destroyAciton, int initCount)
             {
                 Name = name;
-                UnityEngine.Object
                 _gameObject = new GameObject(name);
                 gameObject.SetActive(false);
                 transform.SetParent(Instance.transform);

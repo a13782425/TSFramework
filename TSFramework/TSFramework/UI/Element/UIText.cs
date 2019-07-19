@@ -27,7 +27,7 @@ namespace TSFrame.UI
 
         public void SetValue(object value)
         {
-            text = value.ToString();
+            text = value == null ? "" : value.ToString();
         }
     }
 }
