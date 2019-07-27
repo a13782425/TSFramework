@@ -104,6 +104,7 @@ namespace TSFrame
                 IPoolData pool = _poolDic[poolName];
                 _poolDic.Remove(poolName);
                 pool.Destroy();
+                GameApp.Instance.LogError($"对象池:{poolName} 删除成功");
             }
             else
             {
