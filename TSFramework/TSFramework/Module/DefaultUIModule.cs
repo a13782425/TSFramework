@@ -65,8 +65,8 @@ namespace TSFrame.Module
                     float height = Screen.height;
                     float offsetY = (height - GameSetting.SafeArea.y) / 2f;
                     float offsetX = (width - GameSetting.SafeArea.x) / 2f;
-                    rectTransform.offsetMax = new Vector2(offsetX, offsetY);
-                    rectTransform.offsetMin = new Vector2(offsetX * -1, offsetY * -1);
+                    rectTransform.offsetMax = new Vector2(offsetX * -1, offsetY * -1);
+                    rectTransform.offsetMin = new Vector2(offsetX, offsetY);
                 }
                 else
                 {
