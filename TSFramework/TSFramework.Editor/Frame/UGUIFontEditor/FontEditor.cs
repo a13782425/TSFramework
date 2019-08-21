@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class FontEditor : EditorWindow
 {
-    [MenuItem("SSFrame/Font/创建UGUI字体 #F", false, 101)]
+    [MenuItem("TSFrame/Font/创建UGUI字体 #F", false, 101)]
     public static void OpenWindow()
     {
         EditorWindow.GetWindowWithRect<FontEditor>(new Rect(100, 100, 400, 200));

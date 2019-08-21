@@ -65,6 +65,7 @@
     <Compile Include="Frame\UGUIFontEditor\Font\ByteReader.cs" />
     <Compile Include="Frame\UI\ItemEditor.cs" />
     <Compile Include="Frame\UI\PanelEditor.cs" />
+    <Content Include="Frame\UI\Template\ModelTemplate.txt" />
     <Content Include="Frame\UI\Template\UIDescription.txt" />
     <Compile Include="Frame\UI\TranDto.cs" />
     <Compile Include="Frame\UI\UIDesPanelEditor.cs" />
@@ -79,6 +80,7 @@
     </Compile>
     <Compile Include="UIPlus\TextPlus\TextPlusEditor.cs" />
     <Compile Include="UIPlus\TextPlus\TextPlusEditorUtil.cs" />
+    <Content Include="Frame\UI\Template\UITemplate.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TSFramework\TSFramework.csproj">

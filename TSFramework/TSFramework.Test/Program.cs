@@ -65,10 +65,10 @@ namespace TSFrame.Test
         //}
     }
 
-    public class TestModel : BindingModel
-    {
-        public BindableProperty<string> str = new BindableProperty<string>("str");
-    }
+    //public class TestModel : BindingModel
+    //{
+    //    public BindableProperty<string> str = new BindableProperty<string>("str");
+    //}
     //public class TestModel : IBindingModel
     //{
     //    public BindableProperty<string> str = new BindableProperty<string>("str");

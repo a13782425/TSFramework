@@ -14,6 +14,6 @@ namespace TSFrame.MVVM
         ///// <summary>
         ///// 初始化
         ///// </summary>
-        //void Init();
+        void Initlialize();
     }
 }

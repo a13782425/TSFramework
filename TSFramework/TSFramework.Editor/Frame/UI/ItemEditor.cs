@@ -28,7 +28,7 @@ internal static class ItemEditor
 
     internal static IniTool _iniTool = null;
 
-    [MenuItem("SSFrame/UI/生成Item #I", false, 1)]
+    [MenuItem("TSFrame/UI/生成Item #I", false, 1)]
     internal static void GenerateItem()
     {
         try
@@ -87,6 +87,46 @@ internal static class ItemEditor
             EditorUtility.ClearProgressBar();
         }
     }
+
+    private static void GenerateUserCode(string name)
+    {
+        string panelPath = _iniTool.ReadValue("UIScript", "ItemScriptPath", "");
+        string panelModelPath = _iniTool.ReadValue("UIScript", "ItemDataModelPath", "");
+        string modelName = "";
+        if (!string.IsNullOrWhiteSpace(panelModelPath))
+        {
+            modelName = name + "Data";
+            panelModelPath = Path.Combine(Application.dataPath, panelModelPath, modelName + ".cs");
+            if (!File.Exists(panelModelPath))
+            {
+                string temp = ModelTemplate;
+                temp = temp.Replace("{ClassName}", modelName);
+                File.WriteAllText(panelModelPath, temp, new UTF8Encoding());
+            }
+        }
+        if (!string.IsNullOrWhiteSpace(panelPath))
+        {
+            panelPath = Path.Combine(Application.dataPath, panelPath, name + ".cs");
+            if (!File.Exists(panelPath))
+            {
+                if (string.IsNullOrWhiteSpace(modelName))
+                {
+                    modelName = "NullModel";
+                }
+                string modelFieldName = modelName;
+                string tempChar = modelFieldName[0].ToString();
+                tempChar = tempChar.ToLower();
+                modelFieldName = modelFieldName.Remove(0, 1);
+                modelFieldName = modelFieldName.Insert(0, tempChar);
+                string temp = UITemplate;
+                temp = temp.Replace("{ClassName}", name);
+                temp = temp.Replace("{ModelClass}", modelName);
+                temp = temp.Replace("{ModelClassName}", modelFieldName);
+                File.WriteAllText(panelModelPath, temp, new UTF8Encoding());
+            }
+        }
+    }
+
     private static void GenerateCode(string scriptName, string templateText, List<TranDto> trans, string itemCodePath, string uiPath)
     {
         uiPath = uiPath.Replace(@"\", "/");
@@ -107,193 +147,13 @@ internal static class ItemEditor
 
         File.WriteAllText(Path.Combine(itemCodePath, scriptName), temp, new UTF8Encoding());
     }
-    //private static string GetBindingData(Type panelType)
-    //{
-    //    if (_injectModelField == null)
-    //    {
-    //        return "";
-    //    }
-    //    else
-    //    {
-    //        Type type = typeof(SSFrame.MVVM.BindableProperty<>);
-    //        Type interfaceType = type.GetInterfaces()[0];
-    //        Type bindType = typeof(SSFrame.BindingAttribute);
-    //        Type elementType = typeof(SSFrame.UI.IElement);
-    //        StringBuilder stringBuilder = new StringBuilder();
-    //        FieldInfo[] panelFieldInfos = panelType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-    //        FieldInfo[] injectFieldInfos = _injectModelField.FieldType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-    //        foreach (var item in injectFieldInfos)
-    //        {
-    //            if (interfaceType.IsAssignableFrom(item.FieldType))
-    //            {
-    //                object[] objs = item.GetCustomAttributes(bindType, false);
-    //                if (objs.Length == 1)
-    //                {
-    //                    BindingAttribute bindingAttribute = objs[0] as BindingAttribute;
-    //                    string injectFieldName = item.Name;
-
-    //                    foreach (var panelFieldInfo in panelFieldInfos)
-    //                    {
-    //                        if (elementType.IsAssignableFrom(panelFieldInfo.FieldType))
-    //                        {
-    //                            string element = panelFieldInfo.Name;
-    //                            int index = element.IndexOf('_');
-    //                            index++;
-    //                            element = element.Substring(index, element.Length - index);
-    //                            if (element.ToLower() == injectFieldName.ToLower())
-    //                            {
-    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OneWay) > 0)
-    //                                {
-    //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWay);");
-    //                                    stringBuilder.AppendLine();
-    //                                }
-    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OneWayToSource) > 0)
-    //                                {
-    //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWayToSource);");
-    //                                    stringBuilder.AppendLine();
-    //                                }
-    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.OnTime) > 0)
-    //                                {
-    //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.OnTime);");
-    //                                    stringBuilder.AppendLine();
-    //                                }
-    //                                if ((bindingAttribute.Mode & SSFrame.MVVM.BindingMode.TwoWay) > 0)
-    //                                {
-    //                                    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{_injectModelField.Name}.{injectFieldName}, this.{element}, BindingMode.TwoWay);");
-    //                                    stringBuilder.AppendLine();
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        return stringBuilder.ToString();
-    //    }
-    //}
-
-    //private static string GetInjectData(Type type)
-    //{
-    //    if (type == null)
-    //    {
-    //        return "";
-    //    }
-    //    else
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-    //        Type attrType = typeof(InjectAttribute);
-    //        foreach (var fieldInfo in fieldInfos)
-    //        {
-    //            object[] obj = fieldInfo.GetCustomAttributes(attrType, false);
-    //            if (obj.Length > 0)
-    //            {
-    //                if ((obj[0] as InjectAttribute) != null)
-    //                {
-    //                    sb.AppendLine($"		this.{fieldInfo.Name} = new {fieldInfo.FieldType}();");
-    //                    if (_injectModelField == null)
-    //                    {
-    //                        _injectModelField = fieldInfo;
-    //                    }
-    //                    sb.AppendLine();
-    //                }
-    //            }
-    //        }
-    //        return sb.ToString();
-    //    }
-    //}
-
-    //private static string GetComponentCode(List<TranDto> trans)
-    //{
-    //    StringBuilder sb = new StringBuilder();
-
-    //    foreach (var item in trans)
-    //    {
-    //        string typeName = UIEditorUtils.GetExportType(item.Tran.name, _iniTool);
-    //        string mvvmTypeName = UIEditorUtils.GetMVVMExportType(typeName);
-    //        if (typeName == typeof(Transform).Name)
-    //        {
-    //            sb.AppendLine($"        this.{item.Tran.name} = this.transform.Find(\"{item.ParentPath}{item.Tran.name}\");");
-    //        }
-    //        else if (typeName == typeof(GameObject).Name)
-    //        {
-    //            sb.AppendLine($"        this.{item.Tran.name} = this.transform.Find(\"{item.ParentPath}{item.Tran.name}\").gameObject;");
-    //        }
-    //        else
-    //        {
-    //            if (string.IsNullOrWhiteSpace(mvvmTypeName))
-    //            {
-    //                sb.AppendLine($"        this.{item.Tran.name} = this.transform.Find(\"{item.ParentPath}{item.Tran.name}\").GetComponent<{typeName}>();");
-    //            }
-    //            else
-    //            {
-    //                sb.AppendLine($"        this.raw_{item.Tran.name} = this.transform.Find(\"{item.ParentPath}{item.Tran.name}\").GetComponent<{typeName}>();");
-    //                sb.AppendLine();
-    //                sb.AppendLine($"        this.BindingElement(this.raw_{item.Tran.name}, out this.{item.Tran.name});");
-    //            }
-    //        }
-    //        sb.AppendLine();
-    //    }
-
-    //    return sb.ToString();
-    //}
-
-    //private static string GetVarCode(List<TranDto> trans)
-    //{
-    //    StringBuilder sb = new StringBuilder();
-
-    //    foreach (var item in trans)
-    //    {
-    //        string typeName = UIEditorUtils.GetExportType(item.Tran.name, _iniTool);
-    //        string mvvmTypeName = UIEditorUtils.GetMVVMExportType(typeName);
-
-    //        if (string.IsNullOrWhiteSpace(mvvmTypeName))
-    //        {
-    //            sb.AppendLine($"    private {typeName} {item.Tran.name} = null;");
-    //        }
-    //        else
-    //        {
-    //            sb.AppendLine($"    private {typeName} raw_{item.Tran.name} = null;");
-    //            sb.AppendLine();
-    //            sb.AppendLine($"    private {mvvmTypeName} {item.Tran.name} = null;");
-    //        }
-    //        sb.AppendLine();
-    //    }
-
-    //    return sb.ToString();
-    //}
-
-    //private static void GetTrans(Transform transform, string parentPath, List<TranDto> trans)
-    //{
-    //    if (transform.childCount > 0)
-    //    {
-    //        for (int i = 0; i < transform.childCount; i++)
-    //        {
-    //            Transform tran = transform.GetChild(i);
-    //            string path = parentPath;
-    //            if (transform.parent != null)
-    //            {
-    //                path += (transform.name + "/");
-    //            }
-    //            GetTrans(tran, path, trans);
-    //        }
-
-    //    }
-    //    if (transform.tag == UIEditorUtils.TAG_NAME)
-    //    {
-    //        TranDto tranDto = new TranDto();
-    //        tranDto.Tran = transform;
-    //        tranDto.ParentPath = parentPath;
-    //        trans.Add(tranDto);
-    //    }
-    //}
 
     private static void InitData()
     {
         _iniTool = new IniTool();
         _iniTool.Open(UIEditorUtils._configFilePath);
         _itemUIPath = _iniTool.ReadValue("UI", "ItemPath", "");
-        _itemCodePath = _iniTool.ReadValue("UIScript", "ItemScriptPath", "");
+        _itemCodePath = _iniTool.ReadValue("UIScript", "ItemGeneratedScriptPath", "");
         _itemCodePath = Path.Combine(Application.dataPath, _itemCodePath);
         int index = _itemUIPath.IndexOf("Resources");
         _itemUIResPath = _itemUIPath.Substring(index + UIEditorUtils.RESOURCES_LENGTH, _itemUIPath.Length - index - UIEditorUtils.RESOURCES_LENGTH);

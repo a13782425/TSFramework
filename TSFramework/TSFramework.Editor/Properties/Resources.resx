@@ -124,10 +124,16 @@
   <data name="ItemTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Frame\UI\Template\ItemTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="ModelTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Frame\UI\Template\ModelTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="PanelTemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Frame\UI\Template\PanelTemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="UIDescription" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Frame\UI\Template\UIDescription.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UITemplate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Frame\UI\Template\UITemplate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

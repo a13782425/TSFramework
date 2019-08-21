@@ -1,4 +1,5 @@
-﻿#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
+﻿#if ANTI_CHEAT
+#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
 #define NO_IL2CPP
 #endif
 using System;
@@ -42,7 +43,7 @@ namespace TSFrame
 			fakeValue = value;
 			fakeValueActive = true;
 #else
-            var detectorRunning =  ObscuredCheatingDetector.ExistsAndIsRunning;
+            var detectorRunning = ObscuredCheatingDetector.ExistsAndIsRunning;
             fakeValue = detectorRunning ? value : null;
             fakeValueActive = detectorRunning;
 #endif
@@ -154,7 +155,7 @@ namespace TSFrame
                 currentCryptoKey = cryptoKey;
             }
 
-            if ( ObscuredCheatingDetector.ExistsAndIsRunning)
+            if (ObscuredCheatingDetector.ExistsAndIsRunning)
             {
                 fakeValueActive = false;
                 fakeValue = InternalDecrypt();
@@ -206,9 +207,9 @@ namespace TSFrame
 
             var result = EncryptDecrypt(GetString(hiddenValue), key);
 
-            if ( ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && result != fakeValue)
+            if (ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && result != fakeValue)
             {
-                 ObscuredCheatingDetector.Instance.OnCheatingDetected();
+                ObscuredCheatingDetector.Instance.OnCheatingDetected();
             }
 
             return result;
@@ -357,3 +358,5 @@ namespace TSFrame
         }
     }
 }
+
+#endif

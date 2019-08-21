@@ -1,0 +1,21 @@
+﻿using TSFrame;
+using TSFrame.MVVM;
+using UnityEngine;
+
+public sealed class {ClassName} :IBindingModel
+{
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    public void Initlialize()
+    {
+        
+    }
+    /// <summary>
+    /// 释放
+    /// </summary>
+    public void Dispose()
+    {
+
+    }
+}

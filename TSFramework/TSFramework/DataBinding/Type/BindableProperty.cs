@@ -15,13 +15,18 @@ namespace TSFrame.MVVM
     {
         private Action<T, T> _onValueChanged;
 
-        private Action<object> _onObjValueChanged;
+        private Action<object, object> _onObjValueChanged;
 
         private bool _isEnable = true;
         /// <summary>
         /// 是否启动绑定数据
         /// </summary>
         public bool IsEnable { get => _isEnable; set => _isEnable = value; }
+        private bool _isForce = false;
+        /// <summary>
+        /// 强行刷新
+        /// </summary>
+        public bool IsForce { get => _isForce; set => _isForce = value; }
 
         private T _value;
         public T Value
@@ -32,7 +37,7 @@ namespace TSFrame.MVVM
             }
             set
             {
-                if (!Equals(_value, value))
+                if (IsForce || !Equals(_value, value))
                 {
                     T old = _value;
                     _value = value;
@@ -65,6 +70,7 @@ namespace TSFrame.MVVM
         public void Freed()
         {
             _onValueChanged = null;
+            _onObjValueChanged = null;
         }
 
         /// <summary>
@@ -77,9 +83,18 @@ namespace TSFrame.MVVM
             _onValueChanged += action;
             return this;
         }
-
         /// <summary>
         /// 订阅
+        /// </summary>
+        /// <param name="action">Action(先前的值，现在的值)</param>
+        /// <returns></returns>
+        void IBindableProperty.Subscribe(Action<object, object> valueChanged)
+        {
+            _onObjValueChanged += valueChanged;
+        }
+
+        /// <summary>
+        /// 取消订阅
         /// </summary>
         /// <param name="action">Action(先前的值，现在的值)</param>
         /// <returns></returns>
@@ -88,20 +103,12 @@ namespace TSFrame.MVVM
             _onValueChanged -= action;
             return this;
         }
-
-        #region private
-
-        private void ValueChanged(T oldValue, T newValue)
-        {
-            _onObjValueChanged?.Invoke(_value);
-            _onValueChanged?.Invoke(oldValue, newValue);
-        }
-        void IBindableProperty.Bind(Action<object> valueChanged)
-        {
-            _onObjValueChanged += valueChanged;
-        }
-
-        void IBindableProperty.Unbind(Action<object> valueChanged)
+        /// <summary>
+        /// 取消订阅
+        /// </summary>
+        /// <param name="action">Action(先前的值，现在的值)</param>
+        /// <returns></returns>
+        void IBindableProperty.Unsubscribe(Action<object, object> valueChanged)
         {
             _onObjValueChanged -= valueChanged;
         }
@@ -126,6 +133,13 @@ namespace TSFrame.MVVM
         object IBindableProperty.GetValue()
         {
             return Value;
+        }
+        #region private
+
+        private void ValueChanged(T oldValue, T newValue)
+        {
+            _onObjValueChanged?.Invoke(oldValue, newValue);
+            _onValueChanged?.Invoke(oldValue, newValue);
         }
 
         #endregion

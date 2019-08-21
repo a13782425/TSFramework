@@ -1,5 +1,8 @@
 ﻿使用步骤：
   1.请现在项目目录找到config文件配置PanelPath，
-    ItemPath，PanelScriptPath，ItemScriptPath四个路径
+    ItemPath，PanelScriptPath，ItemScriptPath,
+    PanelGeneratedScriptPath,ItemGeneratedScriptPath
+	PanelDataModelPath,ItemDataModelPath
+    路径进行配置
   2.请根据命名习惯配置UIExport参数：前缀=类型
   3.请将需要导出的GameObject的Tag设置为Export

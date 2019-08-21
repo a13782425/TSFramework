@@ -1,4 +1,5 @@
-﻿#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
+﻿#if ANTI_CHEAT
+#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
 #define NO_IL2CPP
 #endif
 using System;
@@ -260,7 +261,7 @@ namespace TSFrame
                    Math.Abs(q1.w - q2.w) < epsilon;
         }
 
-        #region overrides
+#region overrides
 
         public static implicit operator TSQuaternion(Quaternion value)
         {
@@ -301,7 +302,7 @@ namespace TSFrame
             return InternalDecrypt().ToString(format);
         }
 
-        #endregion
+#endregion
 
         [Serializable]
         public struct EncryptedQuaternion
@@ -316,3 +317,5 @@ namespace TSFrame
         }
     }
 }
+
+#endif

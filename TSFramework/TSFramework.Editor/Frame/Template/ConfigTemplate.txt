@@ -9,8 +9,12 @@ ItemPath=
 
 ;UI脚本,Asset文件夹下的路径，例如在Asset/Script/Code下面，只需要填写Script/Code
 [UIScript]
+PanelGeneratedScriptPath=
+ItemGeneratedScriptPath=
 PanelScriptPath=
 ItemScriptPath=
+PanelDataModelPath=
+ItemDataModelPath=
 
 ;导出游戏物体名称前缀对应的类型，慎重修改
 [UIExport]

@@ -1,0 +1,38 @@
+﻿using TSFrame;
+using TSFrame.MVVM;
+using TSFrame.UI;
+using UnityEngine;
+
+
+public partial class {ClassName}
+{
+    [Inject]
+    private {ModelClass} _{ModelClassName};
+
+    protected override void OnCreate()
+    {
+        AddListener();
+    }
+
+    protected override void OnDestroy()
+    {
+        RemoveListener();
+    }
+
+    #region Listener
+    private void AddListener()
+    {
+
+    }
+    private void RemoveListener()
+    {
+
+    }
+
+    #endregion
+
+    private void Initialize()
+    {
+
+    }
+}

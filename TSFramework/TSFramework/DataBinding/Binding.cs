@@ -395,13 +395,13 @@ namespace TSFrame.MVVM
             internal void BindProp(IBindableProperty value)
             {
                 _bindableProperty = value;
-                _bindableProperty.Bind(OnValueChanged);
+                _bindableProperty.Subscribe(OnValueChanged);
             }
 
-            private void OnValueChanged(object o)
+            private void OnValueChanged(object oldValue,object newValue)
             {
-                SetValue(BindingMode.OneWay, o);
-                SetValue(BindingMode.TwoWay, o);
+                SetValue(BindingMode.OneWay, oldValue);
+                SetValue(BindingMode.TwoWay, oldValue);
             }
             /// <summary>
             /// 设置Value
@@ -446,7 +446,7 @@ namespace TSFrame.MVVM
             {
                 if (_bindableProperty != null)
                 {
-                    _bindableProperty.Unbind(OnValueChanged);
+                    _bindableProperty.Unsubscribe(OnValueChanged);
                 }
                 _bindableProperty = null;
             }

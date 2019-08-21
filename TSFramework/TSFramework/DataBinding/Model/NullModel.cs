@@ -12,7 +12,8 @@ namespace TSFrame.MVVM
     /// </summary>
     public sealed class NullModel : IBindingModel
     {
-        //public void Init() { }
         public void Dispose() { }
+
+        public void Initlialize() { }
     }
 }

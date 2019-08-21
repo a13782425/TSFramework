@@ -1,4 +1,5 @@
-﻿#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
+﻿#if ANTI_CHEAT
+#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
 #define NO_IL2CPP
 #endif
 using System;
@@ -97,7 +98,7 @@ namespace TSFrame
                 }
             }
         }
-        
+
         public static TSByte FromEncrypted(byte encrypted)
         {
             var instance = new TSByte();
@@ -203,39 +204,39 @@ namespace TSFrame
             return value.InternalDecrypt();
         }
         public static TSByte operator ++(TSByte input)
-		{
-			var decrypted = (byte)(input.InternalDecrypt() + 1);
-			input.hiddenValue = EncryptDecrypt(decrypted, input.currentCryptoKey);
+        {
+            var decrypted = (byte)(input.InternalDecrypt() + 1);
+            input.hiddenValue = EncryptDecrypt(decrypted, input.currentCryptoKey);
 
-			if (ObscuredCheatingDetector.ExistsAndIsRunning)
-			{
-				input.fakeValue = decrypted;
-				input.fakeValueActive = true;
-			}
-			else
-			{
-				input.fakeValueActive = false;
-			}
+            if (ObscuredCheatingDetector.ExistsAndIsRunning)
+            {
+                input.fakeValue = decrypted;
+                input.fakeValueActive = true;
+            }
+            else
+            {
+                input.fakeValueActive = false;
+            }
 
-			return input;
-		}
+            return input;
+        }
 
-		public static TSByte operator --(TSByte input)
-		{
-			var decrypted = (byte)(input.InternalDecrypt() - 1);
-			input.hiddenValue = EncryptDecrypt(decrypted, input.currentCryptoKey);
+        public static TSByte operator --(TSByte input)
+        {
+            var decrypted = (byte)(input.InternalDecrypt() - 1);
+            input.hiddenValue = EncryptDecrypt(decrypted, input.currentCryptoKey);
 
-			if (ObscuredCheatingDetector.ExistsAndIsRunning)
-			{
-				input.fakeValue = decrypted;
-				input.fakeValueActive = true;
-			}
-			else
-			{
-				input.fakeValueActive = false;
-			}
-			return input;
-		}
+            if (ObscuredCheatingDetector.ExistsAndIsRunning)
+            {
+                input.fakeValue = decrypted;
+                input.fakeValueActive = true;
+            }
+            else
+            {
+                input.fakeValueActive = false;
+            }
+            return input;
+        }
         public override int GetHashCode()
         {
             return InternalDecrypt().GetHashCode();
@@ -300,3 +301,5 @@ namespace TSFrame
 
     }
 }
+
+#endif

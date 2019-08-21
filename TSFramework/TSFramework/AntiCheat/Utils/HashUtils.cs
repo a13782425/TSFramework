@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ANTI_CHEAT
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,3 +84,5 @@ namespace TSFrame
         }
     }
 }
+
+#endif

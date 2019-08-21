@@ -1,4 +1,5 @@
-﻿#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
+﻿#if ANTI_CHEAT
+#if (UNITY_WINRT || UNITY_WINRT_10_0 || UNITY_WSA || UNITY_WSA_10_0) && !ENABLE_IL2CPP
 #define NO_IL2CPP
 #endif
 using System;
@@ -41,7 +42,7 @@ namespace TSFrame
 			fakeValueActive = true;
 			migratedVersion = null;
 #else
-            var detectorRunning =  ObscuredCheatingDetector.ExistsAndIsRunning;
+            var detectorRunning = ObscuredCheatingDetector.ExistsAndIsRunning;
             fakeValue = detectorRunning ? value : zero;
             fakeValueActive = detectorRunning;
 #endif
@@ -59,7 +60,7 @@ namespace TSFrame
             currentCryptoKey = cryptoKey;
             hiddenValue = Encrypt(x, y, currentCryptoKey);
 
-            if ( ObscuredCheatingDetector.ExistsAndIsRunning)
+            if (ObscuredCheatingDetector.ExistsAndIsRunning)
             {
                 fakeValue = new Vector2(x, y);
                 fakeValueActive = true;
@@ -78,9 +79,9 @@ namespace TSFrame
             get
             {
                 var decrypted = InternalDecryptField(hiddenValue.x);
-                if ( ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && Math.Abs(decrypted - fakeValue.x) >  ObscuredCheatingDetector.Instance.Vector2Epsilon)
+                if (ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && Math.Abs(decrypted - fakeValue.x) > ObscuredCheatingDetector.Instance.Vector2Epsilon)
                 {
-                     ObscuredCheatingDetector.Instance.OnCheatingDetected();
+                    ObscuredCheatingDetector.Instance.OnCheatingDetected();
                 }
                 return decrypted;
             }
@@ -88,7 +89,7 @@ namespace TSFrame
             set
             {
                 hiddenValue.x = InternalEncryptField(value);
-                if ( ObscuredCheatingDetector.ExistsAndIsRunning)
+                if (ObscuredCheatingDetector.ExistsAndIsRunning)
                 {
                     fakeValue.x = value;
                     fakeValue.y = InternalDecryptField(hiddenValue.y);
@@ -106,9 +107,9 @@ namespace TSFrame
             get
             {
                 var decrypted = InternalDecryptField(hiddenValue.y);
-                if ( ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && Math.Abs(decrypted - fakeValue.y) >  ObscuredCheatingDetector.Instance.Vector2Epsilon)
+                if (ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && Math.Abs(decrypted - fakeValue.y) > ObscuredCheatingDetector.Instance.Vector2Epsilon)
                 {
-                     ObscuredCheatingDetector.Instance.OnCheatingDetected();
+                    ObscuredCheatingDetector.Instance.OnCheatingDetected();
                 }
                 return decrypted;
             }
@@ -116,7 +117,7 @@ namespace TSFrame
             set
             {
                 hiddenValue.y = InternalEncryptField(value);
-                if ( ObscuredCheatingDetector.ExistsAndIsRunning)
+                if (ObscuredCheatingDetector.ExistsAndIsRunning)
                 {
                     fakeValue.x = InternalDecryptField(hiddenValue.x);
                     fakeValue.y = value;
@@ -280,7 +281,7 @@ namespace TSFrame
                 currentCryptoKey = cryptoKey;
             }
 
-            if ( ObscuredCheatingDetector.ExistsAndIsRunning)
+            if (ObscuredCheatingDetector.ExistsAndIsRunning)
             {
                 fakeValueActive = false;
                 fakeValue = InternalDecrypt();
@@ -319,9 +320,9 @@ namespace TSFrame
             value.x = TSFloat.Decrypt(hiddenValue.x, currentCryptoKey);
             value.y = TSFloat.Decrypt(hiddenValue.y, currentCryptoKey);
 
-            if ( ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && !CompareVectorsWithTolerance(value, fakeValue))
+            if (ObscuredCheatingDetector.ExistsAndIsRunning && fakeValueActive && !CompareVectorsWithTolerance(value, fakeValue))
             {
-                 ObscuredCheatingDetector.Instance.OnCheatingDetected();
+                ObscuredCheatingDetector.Instance.OnCheatingDetected();
             }
 
             return value;
@@ -329,7 +330,7 @@ namespace TSFrame
 
         private bool CompareVectorsWithTolerance(Vector2 vector1, Vector2 vector2)
         {
-            var epsilon =  ObscuredCheatingDetector.Instance.Vector2Epsilon;
+            var epsilon = ObscuredCheatingDetector.Instance.Vector2Epsilon;
             return Math.Abs(vector1.x - vector2.x) < epsilon &&
                    Math.Abs(vector1.y - vector2.y) < epsilon;
         }
@@ -398,3 +399,5 @@ namespace TSFrame
         }
     }
 }
+
+#endif

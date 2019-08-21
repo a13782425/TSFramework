@@ -93,8 +93,8 @@ internal static class UIEditorUtils
         iniTool.Open(_configFilePath);
         string panelPath = iniTool.ReadValue("UI", "PanelPath", "");
         string itemPath = iniTool.ReadValue("UI", "ItemPath", "");
-        string panelScriptPath = iniTool.ReadValue("UIScript", "PanelScriptPath", "");
-        string itemScriptPath = iniTool.ReadValue("UIScript", "ItemScriptPath", "");
+        string panelScriptPath = iniTool.ReadValue("UIScript", "PanelGeneratedScriptPath", "");
+        string itemScriptPath = iniTool.ReadValue("UIScript", "ItemGeneratedScriptPath", "");
 
         if (string.IsNullOrWhiteSpace(panelPath) || string.IsNullOrWhiteSpace(itemPath) || string.IsNullOrWhiteSpace(panelScriptPath) || string.IsNullOrWhiteSpace(itemScriptPath))
         {

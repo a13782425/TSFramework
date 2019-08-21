@@ -65,15 +65,21 @@ namespace TSFrame.Editor.Properties {
         ///[Global]
         ///Placeholder=0
         ///
-        ///; UI
+        ///; UI,Asset文件夹下的路径，UI只能在Resources下面，例如在Asset/Resources/UI下面，只需要填写Resources/UI
         ///[UI]
         ///PanelPath=
         ///ItemPath=
         ///
+        ///;UI脚本,Asset文件夹下的路径，例如在Asset/Script/Code下面，只需要填写Script/Code
         ///[UIScript]
+        ///PanelGeneratedScriptPath=
+        ///ItemGeneratedScriptPath=
         ///PanelScriptPath=
         ///ItemScriptPath=
+        ///PanelDataModelPath=
+        ///ItemDataModelPath=
         ///
+        ///;导出游戏物体名称前缀对应的类型，慎重修改
         ///[UIExport]
         ///btn_=Button
         ///img_=Image
@@ -82,13 +88,8 @@ namespace TSFrame.Editor.Properties {
         ///inp_=InputField
         ///srect_=ScrollRect
         ///sbar_=Scrollbar
-        ///go_=GameObject
-        ///tran_=Transform
-        ///rtran_=RectTransform
-        ///tog_= Toggle
-        ///sli_=Slider
-        ///drop_= Dropdown
-        ///can_= Canvas 的本地化字符串。
+        ///tog_=Toggle
+        ///sli_=Slide [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ConfigTemplate {
             get {
@@ -97,7 +98,17 @@ namespace TSFrame.Editor.Properties {
         }
         
         /// <summary>
-        ///   查找类似  的本地化字符串。
+        ///   查找类似 //------------------------------------------------------------------------------------------------------------
+        /////-----------------------------------generate file {GeneratedTime}----------------------------------------
+        /////------------------------------------------------------------------------------------------------------------
+        ///using TSFrame.MVVM;
+        ///using TSFrame.UI;
+        ///using UnityEngine;
+        ///using UnityEngine.UI;
+        ///
+        ///public partial class {ClassName} : UIItem
+        ///{
+        ///    public override string UIPath =&gt; &quot;{UIPath}&quot;;        /// [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string ItemTemplate {
             get {
@@ -106,7 +117,46 @@ namespace TSFrame.Editor.Properties {
         }
         
         /// <summary>
-        ///   查找类似  的本地化字符串。
+        ///   查找类似 using TSFrame;
+        ///using TSFrame.MVVM;
+        ///using UnityEngine;
+        ///
+        ///public sealed class {ClassName} :IBindingModel
+        ///{
+        ///    /// &lt;summary&gt;
+        ///    /// 初始化
+        ///    /// &lt;/summary&gt;
+        ///    public void Initlialize() 
+        ///	{
+        ///        
+        ///    }
+        ///    /// &lt;summary&gt;
+        ///    /// 释放
+        ///    /// &lt;/summary&gt;
+        ///    public void Dispose() 
+        ///	{
+        ///
+        ///    }
+        ///} 的本地化字符串。
+        /// </summary>
+        internal static string ModelTemplate {
+            get {
+                return ResourceManager.GetString("ModelTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 //------------------------------------------------------------------------------------------------------------
+        /////-----------------------------------generate file {GeneratedTime}----------------------------------------
+        /////------------------------------------------------------------------------------------------------------------
+        ///using TSFrame.MVVM;
+        ///using TSFrame.UI;
+        ///using UnityEngine;
+        ///using UnityEngine.UI;
+        ///
+        ///public partial class {ClassName} : UIPanel
+        ///{
+        ///    public override string UIPath =&gt; &quot;{UIPath}&quot;; [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string PanelTemplate {
             get {
@@ -115,11 +165,61 @@ namespace TSFrame.Editor.Properties {
         }
         
         /// <summary>
-        ///   查找类似  的本地化字符串。
+        ///   查找类似 使用步骤：
+        ///  1.请现在项目目录找到config文件配置PanelPath，
+        ///    ItemPath，PanelScriptPath，ItemScriptPath,
+        ///    PanelGeneratedScriptPath,ItemGeneratedScriptPath
+        ///	PanelDataModelPath,ItemDataModelPath
+        ///    路径进行配置
+        ///  2.请根据命名习惯配置UIExport参数：前缀=类型
+        ///  3.请将需要导出的GameObject的Tag设置为Export 的本地化字符串。
         /// </summary>
         internal static string UIDescription {
             get {
                 return ResourceManager.GetString("UIDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 using TSFrame;
+        ///using TSFrame.MVVM;
+        ///using TSFrame.UI;
+        ///using UnityEngine;
+        ///
+        ///
+        ///public partial class {ClassName}
+        ///{
+        ///    [Inject]
+        ///    private {ModelClass} _{ModelClassName};
+        ///
+        ///    protected override void OnCreate() 
+        ///	{
+        ///        AddListener();
+        ///    }
+        ///
+        ///    protected override void OnDestroy() 
+        ///	{
+        ///        RemoveListener();
+        ///    }
+        ///
+        ///    #region Listener
+        ///    private void AddListener() {
+        ///
+        ///    }
+        ///    private void RemoveListener() {
+        ///
+        ///    }
+        ///
+        ///    #endregion
+        ///
+        ///    private void Initialize() 
+        ///	{
+        ///
+        ///    } [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string UITemplate {
+            get {
+                return ResourceManager.GetString("UITemplate", resourceCulture);
             }
         }
     }
