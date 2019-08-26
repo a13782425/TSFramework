@@ -10,6 +10,7 @@ namespace TSFrame.Module
 {
     public interface IUILoader
     {
+        Canvas MainCanvas { get; }
         GameObject MainUIObj { get; }
         /// <summary>
         /// 如果parent == null,则按照UILayerEnum进行排序

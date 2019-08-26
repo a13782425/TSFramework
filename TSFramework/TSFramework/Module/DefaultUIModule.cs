@@ -17,7 +17,7 @@ namespace TSFrame.Module
         private GameObject _eventSystem = null;
         private GameObject _mainObj = null;
         public GameObject MainUIObj => _mainObj;
-
+        public Canvas MainCanvas => _canvas;
         private Dictionary<UILayerEnum, RectTransform> _tranDic = null;
 
         private Dictionary<int, UIPanel> _panelDic = null;

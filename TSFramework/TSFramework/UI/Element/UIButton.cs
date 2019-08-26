@@ -16,7 +16,7 @@ namespace TSFrame.UI
 
         internal UIButton(UIView uIView, Button control) : base(uIView, control)
         {
-            Element.onClick.AddListener(tempOnClick);
+            this.onPointerClick += tempOnClick; ;
         }
 
         /// <summary>
@@ -35,13 +35,11 @@ namespace TSFrame.UI
             OnClickWithObj = null;
             OnClick = null;
         }
-
-        private void tempOnClick()
+        private void tempOnClick(UnityEngine.EventSystems.PointerEventData obj)
         {
             OnClick?.Invoke();
             OnClickWithObj?.Invoke(gameObject);
         }
-
 
     }
 }

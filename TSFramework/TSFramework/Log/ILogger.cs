@@ -12,8 +12,8 @@ namespace TSFrame
 
         void Log(string message);
         void Log(object message);
-        void LogWarn(string message);
-        void LogWarn(object message);
+        void LogWarning(string message);
+        void LogWarning(object message);
         void LogError(string message);
         void LogError(object message);
     }

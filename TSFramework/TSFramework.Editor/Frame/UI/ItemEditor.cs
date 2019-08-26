@@ -58,6 +58,7 @@ internal static class ItemEditor
                 List<TranDto> trans = new List<TranDto>();
                 UIEditorUtils.GetTrans(obj.transform, "", trans);
                 trans.Reverse();
+                GenerateUserCode(obj.name);
                 GenerateCode(obj.name + ".gen.cs", ItemTemplate, trans, _itemCodePath, Path.Combine(_itemUIResPath, Path.GetFileNameWithoutExtension(item)));
                 Thread.Sleep(200);
             }
@@ -90,24 +91,24 @@ internal static class ItemEditor
 
     private static void GenerateUserCode(string name)
     {
-        string panelPath = _iniTool.ReadValue("UIScript", "ItemScriptPath", "");
-        string panelModelPath = _iniTool.ReadValue("UIScript", "ItemDataModelPath", "");
+        string itemPath = _iniTool.ReadValue("UIScript", "ItemScriptPath", "");
+        string itemModelPath = _iniTool.ReadValue("UIScript", "ItemDataModelPath", "");
         string modelName = "";
-        if (!string.IsNullOrWhiteSpace(panelModelPath))
+        if (!string.IsNullOrWhiteSpace(itemModelPath))
         {
             modelName = name + "Data";
-            panelModelPath = Path.Combine(Application.dataPath, panelModelPath, modelName + ".cs");
-            if (!File.Exists(panelModelPath))
+            itemModelPath = Path.Combine(Application.dataPath, itemModelPath, modelName + ".cs");
+            if (!File.Exists(itemModelPath))
             {
                 string temp = ModelTemplate;
                 temp = temp.Replace("{ClassName}", modelName);
-                File.WriteAllText(panelModelPath, temp, new UTF8Encoding());
+                File.WriteAllText(itemModelPath, temp, new UTF8Encoding());
             }
         }
-        if (!string.IsNullOrWhiteSpace(panelPath))
+        if (!string.IsNullOrWhiteSpace(itemPath))
         {
-            panelPath = Path.Combine(Application.dataPath, panelPath, name + ".cs");
-            if (!File.Exists(panelPath))
+            itemPath = Path.Combine(Application.dataPath, itemPath, name + ".cs");
+            if (!File.Exists(itemPath))
             {
                 if (string.IsNullOrWhiteSpace(modelName))
                 {
@@ -122,7 +123,7 @@ internal static class ItemEditor
                 temp = temp.Replace("{ClassName}", name);
                 temp = temp.Replace("{ModelClass}", modelName);
                 temp = temp.Replace("{ModelClassName}", modelFieldName);
-                File.WriteAllText(panelModelPath, temp, new UTF8Encoding());
+                File.WriteAllText(itemPath, temp, new UTF8Encoding());
             }
         }
     }

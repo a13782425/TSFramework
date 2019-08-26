@@ -32,6 +32,7 @@ namespace TSFrame
 
         private GameApp()
         {
+            _startTime = DateTime.Now;
             gameObject = new GameObject("GameApp");
             transform = gameObject.transform;
             transform.SetParent(null);
@@ -113,6 +114,7 @@ namespace TSFrame
         #region Logger
 
         private ILogger _logger;
+
         /// <summary>
         /// 日志
         /// </summary>
@@ -127,7 +129,12 @@ namespace TSFrame
                 return _logger;
             }
         }
+
+        /// <summary>
+        /// 是否启用Log
+        /// </summary>
         public bool LoggerEnable => Logger.IsEnable;
+
         /// <summary>
         /// 设置日志类
         /// </summary>
@@ -139,6 +146,7 @@ namespace TSFrame
             _logger = logger;
             return this;
         }
+
         /// <summary>
         /// 设置是否启用日志
         /// </summary>
@@ -149,11 +157,23 @@ namespace TSFrame
             Logger.IsEnable = isEnable;
             return this;
         }
+
+        /// <summary>
+        /// 打印日志
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public GameApp Log(object message)
         {
             this.Log(message.ToString());
             return this;
         }
+
+        /// <summary>
+        /// 打印日志
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public GameApp Log(string message)
         {
             if (!this.LoggerEnable)
@@ -161,23 +181,47 @@ namespace TSFrame
             this.Logger.Log(message);
             return this;
         }
-        public GameApp LogWarn(object message)
+
+        /// <summary>
+        /// 打印警告
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public GameApp LogWarning(object message)
         {
-            this.LogWarn(message.ToString());
+            this.LogWarning(message.ToString());
             return this;
         }
-        public GameApp LogWarn(string message)
+
+        /// <summary>
+        /// 打印警告
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public GameApp LogWarning(string message)
         {
             if (!this.LoggerEnable)
                 return this;
-            this.Logger.LogWarn(message);
+            this.Logger.LogWarning(message);
             return this;
         }
+
+        /// <summary>
+        /// 打印错误
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public GameApp LogError(object message)
         {
             this.LogError(message.ToString());
             return this;
         }
+
+        /// <summary>
+        /// 打印错误
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public GameApp LogError(string message)
         {
             if (!this.LoggerEnable)
@@ -251,6 +295,17 @@ namespace TSFrame
             return this;
         }
 
+        /// <summary>
+        /// 设置游戏帧数
+        /// </summary>
+        /// <param name="frameRate">游戏帧率</param>
+        /// <returns></returns>
+        public GameApp SetFrameRate(int frameRate)
+        {
+            GameSetting.FrameRate = frameRate;
+            return this;
+        }
+
         #endregion
 
         #region UI
@@ -319,10 +374,15 @@ namespace TSFrame
                     return Time.deltaTime;
             }
         }
+        /// <summary>
+        /// 设置deltaTime类型
+        /// </summary>
+        /// <param name="calDeltaTime"></param>
+        /// <returns></returns>
         public GameApp SetDeltaTimeType(ICalDeltaTime calDeltaTime)
         {
             if (calDeltaTime == null)
-                LogWarn("计算时间的控制器为空");
+                LogWarning("计算时间的控制器为空");
             else
             {
                 _deltaTimeType = DeltaTimeType.Customize;
@@ -330,10 +390,15 @@ namespace TSFrame
             }
             return this;
         }
+        /// <summary>
+        /// 设置deltaTime类型
+        /// </summary>
+        /// <param name="deltaTimeType"></param>
+        /// <returns></returns>
         public GameApp SetDeltaTimeType(GameApp.DeltaTimeType deltaTimeType)
         {
             if (deltaTimeType == DeltaTimeType.Customize)
-                LogWarn("Customize 类型请用另一个重载");
+                LogWarning("Customize 类型请用另一个重载");
             else
                 _deltaTimeType = deltaTimeType;
             return this;
@@ -341,7 +406,12 @@ namespace TSFrame
 
         private GameApp.TimeType _timeType = GameApp.TimeType.Time;
 
+        private readonly DateTime _startTime = DateTime.Now;
+
         private ICalTime _icalTime = null;
+        /// <summary>
+        /// 游戏时间
+        /// </summary>
         public float gameTime => GetGameTime();
 
         private float GetGameTime()
@@ -352,6 +422,8 @@ namespace TSFrame
                     return Time.unscaledTime;
                 case TimeType.Customize:
                     return _icalTime.GetTime();
+                case TimeType.RealTime:
+                    return (float)((DateTime.Now - _startTime).TotalSeconds);
                 default:
                 case TimeType.Time:
                     return Time.time;
@@ -360,7 +432,7 @@ namespace TSFrame
         public GameApp SetTimeType(ICalTime calTime)
         {
             if (calTime == null)
-                LogWarn("计算时间的控制器为空");
+                LogWarning("计算时间的控制器为空");
             else
             {
                 _timeType = TimeType.Customize;
@@ -371,7 +443,7 @@ namespace TSFrame
         public GameApp SetTimeType(GameApp.TimeType timeType)
         {
             if (timeType == TimeType.Customize)
-                LogWarn("Customize 类型请用另一个重载");
+                LogWarning("Customize 类型请用另一个重载");
             else
                 _timeType = timeType;
             return this;
@@ -392,6 +464,7 @@ namespace TSFrame
         {
             _moduleDtos = new List<ModuleDto>();
             InitModule();
+            Application.targetFrameRate = GameSetting.FrameRate;
             return this;
         }
 
@@ -554,6 +627,11 @@ namespace TSFrame
             /// Time.unscaledTime
             /// </summary>
             UnscaledTime,
+            /// <summary>
+            /// 真实的时间
+            /// DateTime.Now
+            /// </summary>
+            RealTime,
             /// <summary>
             /// 定制
             /// </summary>

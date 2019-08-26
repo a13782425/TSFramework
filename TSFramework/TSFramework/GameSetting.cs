@@ -25,5 +25,13 @@ namespace TSFrame
         /// UI安全区域
         /// </summary>
         internal static UnityEngine.Vector2 SafeArea { get => _safeArea; set => _safeArea = value; }
+
+
+        private static int _frameRate = 60;
+        /// <summary>
+        /// 帧率
+        /// </summary>
+        internal static int FrameRate { get => _frameRate; set => _frameRate = value; }
+
     }
 }

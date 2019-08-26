@@ -89,7 +89,7 @@ namespace TSFrame.UI
             }
         }
 
-
+        protected 
         #endregion
 
         protected UIElement()
@@ -215,6 +215,8 @@ namespace TSFrame.UI
         /// 事件字典
         /// </summary>
         private Dictionary<EventTriggerType, UIEventBase> _eventDic = null;
+
+        
 
         /// <summary>
         /// 拖动开始事件

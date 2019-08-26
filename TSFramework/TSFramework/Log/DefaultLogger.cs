@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TSFrame
 {
-    public sealed class DefaultLogger : ILogger
+    internal sealed class DefaultLogger : ILogger
     {
         public DefaultLogger()
         {
@@ -33,7 +33,7 @@ namespace TSFrame
             }
         }
 
-        public void LogWarn(string message)
+        public void LogWarning(string message)
         {
             if (IsEnable)
             {
@@ -42,7 +42,7 @@ namespace TSFrame
             }
         }
 
-        public void LogWarn(object message)
+        public void LogWarning(object message)
         {
             if (IsEnable)
             {

@@ -79,7 +79,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="UIPlus\TextPlus\TextPlusEditor.cs" />
-    <Compile Include="UIPlus\TextPlus\TextPlusEditorUtil.cs" />
+    <Compile Include="UIPlus\UIPlusEditorUtil.cs" />
     <Content Include="Frame\UI\Template\UITemplate.txt" />
   </ItemGroup>
   <ItemGroup>

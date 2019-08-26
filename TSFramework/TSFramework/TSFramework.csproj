@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\TSFramework.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -120,6 +121,7 @@
     <Compile Include="UI\UIPlus\TextPlus\Handler\TextShadowHandler.cs" />
     <Compile Include="UI\UIPlus\TextPlus\Handler\VertexColorHandler.cs" />
     <Compile Include="UI\UIPlus\TextPlus\TextPlus.cs" />
+    <Compile Include="UI\UIPlus\UIParticle\UIParticle.cs" />
     <Compile Include="UI\UIUtil.cs" />
   </ItemGroup>
   <ItemGroup />

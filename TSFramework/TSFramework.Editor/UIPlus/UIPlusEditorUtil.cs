@@ -7,7 +7,7 @@ internal static class TextPlusEditorUtil
 {
 
     [MenuItem("GameObject/UI/TextPlus", false, 2000)]
-    public static void AddTextPlus()
+    public static void CreateTextPlus()
     {
         GameObject root = new GameObject("Text", typeof(RectTransform), typeof(TextPlus));
         ResetInCanvasFor((RectTransform)root.transform);
@@ -20,7 +20,7 @@ internal static class TextPlusEditorUtil
         Selection.activeGameObject = root;
     }
     [MenuItem("GameObject/UI/TextPlus - Input Field", false, 2036)]
-    public static void AddTextPlusInput()
+    public static void CreateTextPlusInput()
     {
         //GameObject root = new GameObject("Text", typeof(RectTransform), typeof(Image),typeof(InputField));
         GameObject root = DefaultControls.CreateInputField(GetStandardResources());
@@ -33,6 +33,14 @@ internal static class TextPlusEditorUtil
         text.supportRichText = false;
         text.color = Color.black;
         root.GetComponent<InputField>().textComponent = text;
+        root.transform.localPosition = Vector3.zero;
+        Selection.activeGameObject = root;
+    }
+    [MenuItem("GameObject/UI/UIParticle", false, 5000)]
+    public static void CreateUIParticle()
+    {
+        GameObject root = new GameObject("UIParticle", typeof(RectTransform), typeof(UIParticle));
+        ResetInCanvasFor((RectTransform)root.transform);
         root.transform.localPosition = Vector3.zero;
         Selection.activeGameObject = root;
     }
