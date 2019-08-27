@@ -36,6 +36,8 @@ namespace TSFrame.UI
         /// </summary>
         public Binding BindingContext { get => _bindingContext; }
 
+        private Dictionary<int, Coroutine> _coroutineDic;
+
         /// <summary>
         /// 任务工厂
         /// </summary>
@@ -44,7 +46,7 @@ namespace TSFrame.UI
         protected UIView() : base()
         {
             _uiElementDic = new Dictionary<int, UIElement>();
-
+            _coroutineDic = new Dictionary<int, Coroutine>();
             _bindingContext = new Binding(this);
         }
 
@@ -110,6 +112,7 @@ namespace TSFrame.UI
         {
             foreach (var item in UIElementDic)
             {
+                //处于激活状态才会相应事件
                 if (item.Value.active)
                 {
                     item.Value.Internal_OnEnable();
@@ -123,11 +126,11 @@ namespace TSFrame.UI
             this.BindingContext.active = false;
             foreach (var item in UIElementDic)
             {
+                //处于激活状态才会相应事件
                 if (item.Value.active)
                 {
                     item.Value.Internal_OnDisable();
                 }
-                //item.Value.active = false;
             }
             this.OnDisable();
         }
@@ -167,16 +170,32 @@ namespace TSFrame.UI
         protected Coroutine StartCoroutine(IEnumerator routine)
         {
             Coroutine coroutine = GameApp.Instance.StartCoroutine(routine);
+            _coroutineDic.Add(coroutine.GetHashCode(), coroutine);
             return coroutine;
         }
         /// <summary>
         /// 停止协程
         /// </summary>
         /// <param name="coroutine"></param>
-        /// <returns></returns>
         public void StopCoroutine(Coroutine coroutine)
         {
             GameApp.Instance.StopCoroutine(coroutine);
+            int hashCode = coroutine.GetHashCode();
+            if (_coroutineDic.ContainsKey(hashCode))
+            {
+                _coroutineDic.Remove(hashCode);
+            }
+        }
+        /// <summary>
+        /// 停止协程
+        /// </summary>
+        public void StopAllCoroutines()
+        {
+            foreach (var item in _coroutineDic)
+            {
+                GameApp.Instance.StopCoroutine(item.Value);
+            }
+            _coroutineDic.Clear();
         }
         #endregion
 

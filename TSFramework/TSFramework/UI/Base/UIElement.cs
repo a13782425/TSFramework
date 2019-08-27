@@ -89,18 +89,17 @@ namespace TSFrame.UI
             }
         }
 
-        protected 
         #endregion
 
         protected UIElement()
         {
-            _instanceId = UIUtil.GetInstanceId();
+            _instanceId = FrameTool.GetInstanceId();
             _eventDic = new Dictionary<EventTriggerType, UIEventBase>();
         }
 
         protected UIElement(GameObject obj)
         {
-            _instanceId = UIUtil.GetInstanceId();
+            _instanceId = FrameTool.GetInstanceId();
             _eventDic = new Dictionary<EventTriggerType, UIEventBase>();
             _gameObject = obj;
             if (_gameObject != null)
@@ -125,7 +124,7 @@ namespace TSFrame.UI
             obj.Internal_OnDestroy();
             UnityEngine.Object.Destroy(obj.gameObject);
             obj._gameObject = null;
-            UIUtil.RecoverInstanceId(obj.InstanceId);
+            FrameTool.RecoverInstanceId(obj.InstanceId);
             obj = null;
         }
 
@@ -138,7 +137,7 @@ namespace TSFrame.UI
             obj.OnDestroy();
             UnityEngine.Object.DestroyImmediate(obj.gameObject);
             obj._gameObject = null;
-            UIUtil.RecoverInstanceId(obj.InstanceId);
+            FrameTool.RecoverInstanceId(obj.InstanceId);
             obj = null;
         }
         #endregion

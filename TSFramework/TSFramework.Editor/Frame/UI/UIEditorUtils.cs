@@ -138,10 +138,10 @@ internal static class UIEditorUtils
 
                         BindingAttribute bindingAttribute = objs[0] as BindingAttribute;
                         string injectFieldName = item.Name;
-                        if (interfaceName != injectFieldName)
-                        {
-                            ErrorList.Add($"{modelField.FieldType.Name}数据类中字段：{injectFieldName}和配置名：{interfaceName}不一致");
-                        }
+                        //if (interfaceName != injectFieldName)
+                        //{
+                        //    ErrorList.Add($"{modelField.FieldType.Name}数据类中字段：{injectFieldName}和配置名：{interfaceName}不一致");
+                        //}
                         foreach (var panelFieldInfo in panelFieldInfos)
                         {
                             if (elementType.IsAssignableFrom(panelFieldInfo.FieldType))
@@ -154,24 +154,44 @@ internal static class UIEditorUtils
                                 {
                                     if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWay) > 0)
                                     {
-                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWay);");
+                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(\"{injectFieldName}\", this.{element}, BindingMode.OneWay);");
                                         stringBuilder.AppendLine();
                                     }
                                     if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWayToSource) > 0)
                                     {
-                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWayToSource);");
+                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(\"{injectFieldName}\", this.{element}, BindingMode.OneWayToSource);");
                                         stringBuilder.AppendLine();
                                     }
                                     if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OnTime) > 0)
                                     {
-                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.OnTime);");
+                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(\"{injectFieldName}\", this.{element}, BindingMode.OnTime);");
                                         stringBuilder.AppendLine();
                                     }
                                     if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.TwoWay) > 0)
                                     {
-                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.TwoWay);");
+                                        stringBuilder.AppendLine($"        this.BindingContext.Bind(\"{injectFieldName}\", this.{element}, BindingMode.TwoWay);");
                                         stringBuilder.AppendLine();
                                     }
+                                    //if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWay) > 0)
+                                    //{
+                                    //    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWay);");
+                                    //    stringBuilder.AppendLine();
+                                    //}
+                                    //if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OneWayToSource) > 0)
+                                    //{
+                                    //    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.OneWayToSource);");
+                                    //    stringBuilder.AppendLine();
+                                    //}
+                                    //if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.OnTime) > 0)
+                                    //{
+                                    //    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.OnTime);");
+                                    //    stringBuilder.AppendLine();
+                                    //}
+                                    //if ((bindingAttribute.Mode & TSFrame.MVVM.BindingMode.TwoWay) > 0)
+                                    //{
+                                    //    stringBuilder.AppendLine($"        this.BindingContext.Bind(this.{modelField.Name}.{injectFieldName}, this.{element}, BindingMode.TwoWay);");
+                                    //    stringBuilder.AppendLine();
+                                    //}
                                 }
                             }
                         }

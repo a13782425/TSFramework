@@ -398,10 +398,10 @@ namespace TSFrame.MVVM
                 _bindableProperty.Subscribe(OnValueChanged);
             }
 
-            private void OnValueChanged(object oldValue,object newValue)
+            private void OnValueChanged(object oldValue, object newValue)
             {
-                SetValue(BindingMode.OneWay, oldValue);
-                SetValue(BindingMode.TwoWay, oldValue);
+                SetValue(BindingMode.OneWay, newValue);
+                SetValue(BindingMode.TwoWay, newValue);
             }
             /// <summary>
             /// 设置Value
@@ -415,8 +415,15 @@ namespace TSFrame.MVVM
                 }
                 catch (Exception ex)
                 {
-                    GameApp.Instance.LogError(ex.Message);
-                    GameApp.Instance.LogError($"猜测错误：{_currentBinding.SourceData.GetType().Name} 中绑定数据字段：{FieldName} 不存在！");
+                    if (_currentBinding.SourceData == null)
+                    {
+                        GameApp.Instance.LogError($"UIView :{_currentBinding._view.name} 中数据源为空！！！");
+                    }
+                    else
+                    {
+                        GameApp.Instance.LogError(ex.Message);
+                        GameApp.Instance.LogError($"猜测错误：{_currentBinding.SourceData.GetType().Name} 中绑定数据字段：{FieldName} 不存在！");
+                    }
                 }
             }
             /// <summary>

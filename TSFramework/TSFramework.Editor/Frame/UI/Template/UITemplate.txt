@@ -1,4 +1,6 @@
-﻿using TSFrame;
+﻿using System;
+using System.Collections.Generic;
+using TSFrame;
 using TSFrame.MVVM;
 using TSFrame.UI;
 using UnityEngine;
@@ -31,8 +33,4 @@ public partial class {ClassName}
 
     #endregion
 
-    private void Initialize()
-    {
-
-    }
 }

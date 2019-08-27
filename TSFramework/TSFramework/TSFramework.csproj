@@ -81,7 +81,6 @@
     <Compile Include="Await\AwaitExtensions.cs" />
     <Compile Include="DataBinding\Base\IBindingModel.cs" />
     <Compile Include="DataBinding\BindingCacheData.cs" />
-    <Compile Include="DataBinding\Model\BindingModel.cs" />
     <Compile Include="DataBinding\Type\BindableList.cs" />
     <Compile Include="GameApp.cs" />
     <Compile Include="GameSetting.cs" />
@@ -93,6 +92,7 @@
     <Compile Include="Module\Base\IUILoader.cs" />
     <Compile Include="Module\DefaultResourcesModule.cs" />
     <Compile Include="Module\DefaultUIModule.cs" />
+    <Compile Include="Tool\FrameTool.cs" />
     <Compile Include="Tool\ObjectPool.cs" />
     <Compile Include="Tool\Singleton.cs" />
     <Compile Include="UI\Base\IBindingElement.cs" />
@@ -100,7 +100,7 @@
     <Compile Include="DataBinding\Binding.cs" />
     <Compile Include="DataBinding\BindingMode.cs" />
     <Compile Include="DataBinding\Base\IBindableProperty.cs" />
-    <Compile Include="DataBinding\Model\NullModel.cs" />
+    <Compile Include="Model\NullModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Base\UIElement.cs" />
     <Compile Include="UI\Base\UIItem.cs" />

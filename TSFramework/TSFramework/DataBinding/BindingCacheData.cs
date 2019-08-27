@@ -29,7 +29,7 @@ namespace TSFrame.MVVM
             else
             {
                 List<FieldInfo> tempList = new List<FieldInfo>();
-                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 foreach (var item in fieldInfos)
                 {
                     if (_bindableType.IsAssignableFrom(item.FieldType))
