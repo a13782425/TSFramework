@@ -13,11 +13,11 @@ namespace TSFrame.MVVM
     {
         #region variable
 
-        private IBindingModel _sourceData = null;
+        private BindingModel _sourceData = null;
         /// <summary>
         /// 当前绑定的数据
         /// </summary>
-        public IBindingModel SourceData { get => _sourceData; set { SourceDataChange(value); } }
+        public BindingModel SourceData { get => _sourceData; set { SourceDataChange(value); } }
 
         /// <summary>
         /// 绑定数据对应绑定模式缓存
@@ -285,13 +285,14 @@ namespace TSFrame.MVVM
         /// <summary>
         /// 源数据改变回调
         /// </summary>
-        private void SourceDataChange(IBindingModel data)
+        private void SourceDataChange(BindingModel data)
         {
             if (data == null)
             {
                 GameApp.Instance.LogError("绑定的数据为空！");
                 return;
             }
+            data.Initlialize();
             Type type = data.GetType();
             List<FieldInfo> fieldInfos = BindingCacheData.GetFieldInfos(type);
             foreach (var item in fieldInfos)
@@ -398,10 +399,10 @@ namespace TSFrame.MVVM
                 _bindableProperty.Subscribe(OnValueChanged);
             }
 
-            private void OnValueChanged(object oldValue, object newValue)
+            private void OnValueChanged(object value)
             {
-                SetValue(BindingMode.OneWay, newValue);
-                SetValue(BindingMode.TwoWay, newValue);
+                SetValue(BindingMode.OneWay, value);
+                SetValue(BindingMode.TwoWay, value);
             }
             /// <summary>
             /// 设置Value

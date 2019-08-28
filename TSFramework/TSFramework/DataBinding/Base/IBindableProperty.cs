@@ -9,8 +9,8 @@ namespace TSFrame.MVVM
     internal interface IBindableProperty
     {
         string name { get; }
-        void Subscribe(Action<object, object> action);
-        void Unsubscribe(Action<object, object> action);
+        void Subscribe(Action<object> action);
+        void Unsubscribe(Action<object> action);
         object GetValue();
         void SetValue(object value);
         void Freed();

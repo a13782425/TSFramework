@@ -15,7 +15,7 @@ namespace TSFrame.MVVM
     {
         private Action<T, T> _onValueChanged;
 
-        private Action<object, object> _onObjValueChanged;
+        private Action<object> _onObjValueChanged;
 
         private bool _isEnable = true;
         /// <summary>
@@ -88,7 +88,7 @@ namespace TSFrame.MVVM
         /// </summary>
         /// <param name="action">Action(先前的值，现在的值)</param>
         /// <returns></returns>
-        void IBindableProperty.Subscribe(Action<object, object> valueChanged)
+        void IBindableProperty.Subscribe(Action<object> valueChanged)
         {
             _onObjValueChanged += valueChanged;
         }
@@ -108,7 +108,7 @@ namespace TSFrame.MVVM
         /// </summary>
         /// <param name="action">Action(先前的值，现在的值)</param>
         /// <returns></returns>
-        void IBindableProperty.Unsubscribe(Action<object, object> valueChanged)
+        void IBindableProperty.Unsubscribe(Action<object> valueChanged)
         {
             _onObjValueChanged -= valueChanged;
         }
@@ -138,7 +138,7 @@ namespace TSFrame.MVVM
 
         private void ValueChanged(T oldValue, T newValue)
         {
-            _onObjValueChanged?.Invoke(oldValue, newValue);
+            _onObjValueChanged?.Invoke(newValue);
             _onValueChanged?.Invoke(oldValue, newValue);
         }
 

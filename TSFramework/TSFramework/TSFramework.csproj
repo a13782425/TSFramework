@@ -79,6 +79,7 @@
     <Compile Include="Attribute\InjectAttribute.cs" />
     <Compile Include="Attribute\PriorityAttribute.cs" />
     <Compile Include="Await\AwaitExtensions.cs" />
+    <Compile Include="DataBinding\Base\BindingModel.cs" />
     <Compile Include="DataBinding\Base\IBindingModel.cs" />
     <Compile Include="DataBinding\BindingCacheData.cs" />
     <Compile Include="DataBinding\Type\BindableList.cs" />

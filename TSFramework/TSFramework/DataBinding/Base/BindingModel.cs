@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 namespace TSFrame.MVVM
 {
     /// <summary>
-    /// 绑定数据接口
+    /// 绑定数据模型基类
     /// </summary>
-    internal interface IBindingModel
+    public abstract class BindingModel
     {
         /// <summary>
         /// 绑定数据前调用
         /// </summary>
-        void Initlialize();
+        protected internal virtual void Initlialize() { }
 
         /// <summary>
         /// 取消全部绑定时候调用
         /// </summary>
-        void Dispose();
+        protected internal virtual void Dispose() { }
+
     }
 }
