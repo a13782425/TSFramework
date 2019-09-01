@@ -4,6 +4,7 @@ using TSFrame;
 using TSFrame.MVVM;
 using TSFrame.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public partial class {ClassName}

@@ -52,7 +52,7 @@ namespace TSFrame.UI
         /// <summary>
         /// 父亲
         /// </summary>
-        public UIElement parent { get => _parent; set { _parent = value; this.transform.SetParent(_parent); } }
+        public UIElement parent { get => _parent; set { _parent = value; this.SetParent(_parent); } }
         private protected UIView _uiView = null;
         /// <summary>
         /// 属于哪个视图
@@ -143,6 +143,100 @@ namespace TSFrame.UI
         #endregion
 
         #region public
+        /// <summary>
+        /// 设置到当前层级的第一位
+        /// </summary>
+        public void SetAsFirstSibling()
+        {
+            this.rectTransform.SetAsFirstSibling();
+        }
+        /// <summary>
+        /// 设置到当前层级的最后一位
+        /// </summary>
+        public void SetAsLastSibling()
+        {
+            this.rectTransform.SetAsLastSibling();
+        }
+
+        /// <summary>
+        /// 获取一个组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetComponent<T>() where T : Component
+        {
+            return this.gameObject.GetComponent<T>();
+        }
+        /// <summary>
+        /// 获取多个同一类型的组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T[] GetComponents<T>() where T : Component
+        {
+            return this.gameObject.GetComponents<T>();
+        }
+        /// <summary>
+        /// 在子物体上面获取一个组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetComponentInChildren<T>() where T : Component
+        {
+            return this.gameObject.GetComponentInChildren<T>();
+        }
+        /// <summary>
+        /// 在子物体上面获取多个同一类型的组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T[] GetComponentsInChildren<T>() where T : Component
+        {
+            return this.gameObject.GetComponentsInChildren<T>();
+        }
+        /// <summary>
+        /// 在父物体上面获取一个组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetComponentInParent<T>() where T : Component
+        {
+            return this.gameObject.GetComponentInParent<T>();
+        }
+        /// <summary>
+        /// 在父物体上面获取多个同一类型的组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T[] GetComponentsInParent<T>() where T : Component
+        {
+            return this.gameObject.GetComponentsInParent<T>();
+        }
+        /// <summary>
+        /// 添加一个组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T AddComponent<T>() where T : Component
+        {
+            return this.gameObject.AddComponent<T>();
+        }
+
+        /// <summary>
+        /// 设置服务台
+        /// </summary>
+        public void SetParent(UIElement parent)
+        {
+            this.SetParent(parent.transform);
+        }
+        /// <summary>
+        /// 设置父物体
+        /// </summary>
+        public void SetParent(Transform parent)
+        {
+            this.transform.SetParent(parent);
+        }
+
         /// <summary>
         /// 加载场景时候不删除
         /// </summary>

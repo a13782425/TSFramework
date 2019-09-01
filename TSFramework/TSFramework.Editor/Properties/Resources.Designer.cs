@@ -19,7 +19,7 @@ namespace TSFrame.Editor.Properties {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -117,26 +117,15 @@ namespace TSFrame.Editor.Properties {
         }
         
         /// <summary>
-        ///   查找类似 using TSFrame;
+        ///   查找类似 using System;
+        ///using System.Collections.Generic;
+        ///using TSFrame;
         ///using TSFrame.MVVM;
         ///using UnityEngine;
         ///
-        ///public sealed class {ClassName} :IBindingModel
+        ///public sealed class {ClassName} : BindingModel
         ///{
-        ///    /// &lt;summary&gt;
-        ///    /// 初始化
-        ///    /// &lt;/summary&gt;
-        ///    public void Initlialize() 
-        ///	{
-        ///        
-        ///    }
-        ///    /// &lt;summary&gt;
-        ///    /// 释放
-        ///    /// &lt;/summary&gt;
-        ///    public void Dispose() 
-        ///	{
         ///
-        ///    }
         ///} 的本地化字符串。
         /// </summary>
         internal static string ModelTemplate {
@@ -181,10 +170,13 @@ namespace TSFrame.Editor.Properties {
         }
         
         /// <summary>
-        ///   查找类似 using TSFrame;
+        ///   查找类似 using System;
+        ///using System.Collections.Generic;
+        ///using TSFrame;
         ///using TSFrame.MVVM;
         ///using TSFrame.UI;
         ///using UnityEngine;
+        ///using UnityEngine.UI;
         ///
         ///
         ///public partial class {ClassName}
@@ -192,30 +184,22 @@ namespace TSFrame.Editor.Properties {
         ///    [Inject]
         ///    private {ModelClass} _{ModelClassName};
         ///
-        ///    protected override void OnCreate() 
-        ///	{
+        ///    protected override void OnCreate()
+        ///    {
         ///        AddListener();
         ///    }
         ///
-        ///    protected override void OnDestroy() 
-        ///	{
+        ///    protected override void OnDestroy()
+        ///    {
         ///        RemoveListener();
         ///    }
         ///
         ///    #region Listener
-        ///    private void AddListener() {
+        ///    private void AddListener()
+        ///    {
         ///
         ///    }
-        ///    private void RemoveListener() {
-        ///
-        ///    }
-        ///
-        ///    #endregion
-        ///
-        ///    private void Initialize() 
-        ///	{
-        ///
-        ///    } [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///    private void RemoveList [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string UITemplate {
             get {

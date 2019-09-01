@@ -150,7 +150,7 @@ namespace TSFrame.MVVM
                             object value = item.GetValue(SourceData);
                             if (value is IBindableProperty bindableProperty)
                             {
-                                bindData.SetProp(bindableProperty);
+                                bindData.SetProp(fieldName, bindableProperty);
                                 break;
                             }
                         }
@@ -308,7 +308,7 @@ namespace TSFrame.MVVM
                     }
                     foreach (KeyValuePair<int, BindElementData> temp in _bindElementDic)
                     {
-                        temp.Value.SetProp(bindableProperty);
+                        temp.Value.SetProp(item.Name, bindableProperty);
                     }
                 }
             }
@@ -550,9 +550,9 @@ namespace TSFrame.MVVM
             /// 设置属性
             /// </summary>
             /// <param name="bindableProperty"></param>
-            internal void SetProp(IBindableProperty bindableProperty)
+            internal void SetProp(string propName, IBindableProperty bindableProperty)
             {
-                string propName = bindableProperty.name;
+                //string propName = bindableProperty.name;
                 if (string.IsNullOrWhiteSpace(propName))
                 {
                     GameApp.Instance.LogError($"属性名字为空!");

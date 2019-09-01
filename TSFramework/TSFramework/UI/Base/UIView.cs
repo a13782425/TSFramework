@@ -43,6 +43,7 @@ namespace TSFrame.UI
         /// </summary>
         private TaskFactory _taskFactory = null;
         private CancellationTokenSource _cancellationTokenSource = null;
+
         protected UIView() : base()
         {
             _uiElementDic = new Dictionary<int, UIElement>();
@@ -54,15 +55,6 @@ namespace TSFrame.UI
 
         #region public
 
-        public void SetAsFirstSibling()
-        {
-            this.rectTransform.SetAsFirstSibling();
-        }
-
-        public void SetAsLastSibling()
-        {
-            this.rectTransform.SetAsLastSibling();
-        }
 
         #endregion
 
@@ -85,6 +77,9 @@ namespace TSFrame.UI
 
         }
 
+        /// <summary>
+        /// 销毁的时候调用
+        /// </summary>
         protected override void OnDestroy()
         {
 

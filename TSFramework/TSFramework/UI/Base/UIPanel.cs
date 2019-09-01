@@ -45,6 +45,22 @@ namespace TSFrame.UI
             return t;
         }
 
+        /// <summary>
+        /// 设置层级
+        /// </summary>
+        /// <param name="uILayer"></param>
+        [Obsolete("此方法可能导致意料之外的情况，请设置 LayerEnum 的值")]
+        public void SetLayer(UILayerEnum uILayer)
+        {
+            Transform tran = GameApp.Instance.UILoader.GetParent(uILayer);
+
+            this.SetParent(tran);
+        }
+
+        /// <summary>
+        /// 删除一个Item
+        /// </summary>
+        /// <param name="item"></param>
         public void RemoveItem(UIItem item)
         {
             item.Close();
