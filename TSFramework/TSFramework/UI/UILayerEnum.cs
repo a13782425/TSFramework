@@ -9,6 +9,7 @@ namespace TSFrame.UI
     /// <summary>
     /// UI层级
     /// </summary>
+    [Flags]
     public enum UILayerEnum : int
     {
         /// <summary>

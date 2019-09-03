@@ -20,20 +20,14 @@ namespace TSFrame.Module
         public Canvas MainCanvas => _canvas;
         private Dictionary<UILayerEnum, RectTransform> _tranDic = null;
 
-        private Dictionary<int, UIPanel> _panelDic = null;
-
         private List<UIPanel> _panelList = null;
-
-        //private List<UIPanel> _needClosePanel = null;
 
         public override void Init()
         {
             base.Init();
             CreateMainObj();
             CreateLayerObj();
-            _panelDic = new Dictionary<int, UIPanel>();
             _panelList = new List<UIPanel>();
-            //_needClosePanel = new List<UIPanel>();
         }
         private void CreateMainObj()
         {
@@ -81,7 +75,6 @@ namespace TSFrame.Module
         {
             T t = UIView.CreateView<T>();
             t.transform.SetParent(_tranDic[t.LayerEnum]);
-            _panelDic.Add(t.InstanceId, t);
             _panelList.Add(t);
             return t;
         }
@@ -124,30 +117,51 @@ namespace TSFrame.Module
             }
             return panel as T;
         }
-        public T HidePanel<T>() where T : UIPanel, new()
+        public void HidePanel(UIPanel uIPanel)
         {
-            UIPanel panel = null;
+            uIPanel.active = false;
+        }
+
+        public void HidePanel<T>() where T : UIPanel, new()
+        {
             foreach (var item in _panelList)
             {
                 if (item is T)
                 {
-                    panel = item;
-                    break;
+                    if (item != null)
+                    {
+                        item.active = false;
+                    }
                 }
             }
-            if (panel == null)
+        }
+
+        public void HidePanelByLayer(UILayerEnum layerEnum)
+        {
+            foreach (var item in _panelList)
             {
-                return null;
+                if ((item.LayerEnum & layerEnum) > 0)
+                {
+                    if (item != null)
+                    {
+                        item.active = false;
+                    }
+                }
             }
-            panel.active = false;
-            return panel as T;
+        }
+
+        public void HideAllPanel()
+        {
+            foreach (var item in _panelList)
+            {
+                item.active = false;
+            }
         }
         public void ClosePanel(UIPanel uIPanel)
         {
             if (uIPanel != null)
             {
                 _panelList.Remove(uIPanel);
-                _panelDic.Remove(uIPanel.InstanceId);
                 if (uIPanel.gameObject != null)
                 {
                     uIPanel.Close();
@@ -167,12 +181,42 @@ namespace TSFrame.Module
             foreach (var item in tempList)
             {
                 _panelList.Remove(item);
-                _panelDic.Remove(item.InstanceId);
                 if (item.gameObject != null)
                 {
                     item.Close();
                 }
             }
+        }
+
+        public void ClosePanelByLayer(UILayerEnum layerEnum)
+        {
+            List<UIPanel> tempList = new List<UIPanel>();
+            foreach (var item in _panelList)
+            {
+                if ((item.LayerEnum & layerEnum) > 0)
+                {
+                    tempList.Add(item);
+                }
+            }
+            foreach (var item in tempList)
+            {
+                _panelList.Remove(item);
+                if (item.gameObject != null)
+                {
+                    item.Close();
+                }
+            }
+        }
+        public void CloseAllPanel()
+        {
+            foreach (var item in _panelList)
+            {
+                if (item != null && item.gameObject != null)
+                {
+                    item.Close();
+                }
+            }
+            _panelList.Clear();
         }
 
         public Transform GetParent(UILayerEnum uILayerEnum)
@@ -198,7 +242,6 @@ namespace TSFrame.Module
             }
 
             _panelList.Clear();
-            _panelDic.Clear();
             Object.Destroy(this.gameObject);
         }
 

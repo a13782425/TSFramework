@@ -364,7 +364,7 @@ namespace TSFrame
                 case DeltaTimeType.FixedUnscaledDeltaTime:
                     return Time.fixedUnscaledDeltaTime;
                 case DeltaTimeType.UnscaledDeltaTime:
-                    return Time.fixedUnscaledTime;
+                    return Time.unscaledDeltaTime;
                 case DeltaTimeType.RealTime:
                     return _gameMono.deltaTime;
                 case DeltaTimeType.Customize:
@@ -570,7 +570,7 @@ namespace TSFrame
 
             void Update()
             {
-                deltaTime = (float)(DateTime.Now - _dateTime).TotalMilliseconds;
+                deltaTime = (float)((DateTime.Now - _dateTime).TotalMilliseconds * 0.001);
                 _dateTime = DateTime.Now;
                 Instance.OnUpdate();
             }

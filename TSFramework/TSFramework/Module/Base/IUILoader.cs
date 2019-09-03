@@ -13,11 +13,13 @@ namespace TSFrame.Module
         Canvas MainCanvas { get; }
         GameObject MainUIObj { get; }
         /// <summary>
+        /// 永远创建新的面板
         /// 如果parent == null,则按照UILayerEnum进行排序
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T CreatePanel<T>() where T : UIPanel, new();
+
         /// <summary>
         /// 显示一个Panel，如果没有则创建，如果有则显示
         /// </summary>
@@ -28,12 +30,28 @@ namespace TSFrame.Module
         /// </summary>
         /// <typeparam name="T"></typeparam>
         T GetPanel<T>() where T : UIPanel, new();
+
         /// <summary>
         /// 隐藏一个Panel
         /// </summary>
+        /// <param name="uIPanel"></param>
+        void HidePanel(UIPanel uIPanel);
+        /// <summary>
+        /// 隐藏一个类型Panel
+        /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        T HidePanel<T>() where T : UIPanel, new();
+        void HidePanel<T>() where T : UIPanel, new();
+        /// <summary>
+        /// 隐藏对应层级的UI
+        /// </summary>
+        /// <param name="layerEnum"></param>
+        void HidePanelByLayer(UILayerEnum layerEnum);
+        /// <summary>
+        /// 隐藏全部面板
+        /// </summary>
+        void HideAllPanel();
+
         /// <summary>
         /// 关闭一个Panel
         /// </summary>
@@ -44,6 +62,15 @@ namespace TSFrame.Module
         /// </summary>
         /// <typeparam name="T"></typeparam>
         void ClosePanel<T>() where T : UIPanel, new();
+        /// <summary>
+        /// 关闭对应层级的UI
+        /// </summary>
+        /// <param name="layerEnum"></param>
+        void ClosePanelByLayer(UILayerEnum layerEnum);
+        /// <summary>
+        /// 关闭全部面板
+        /// </summary>
+        void CloseAllPanel();
 
         /// <summary>
         /// 根据层级获取父物体
