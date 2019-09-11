@@ -29,7 +29,8 @@ internal static class UIEditorUtils
         {"TextPlus", "UITextPlus" },
         {"Toggle", "UIToggle" },
         {"Slider", "UISlider" },
-        {"Scrollbar", "UIScrollbar" }
+        {"Scrollbar", "UIScrollbar" },
+        {"Dropdown", "UIDropdown" }
     };
 
     [MenuItem("TSFrame/UI/生成全部 &#U", false, 2)]
@@ -61,7 +62,7 @@ internal static class UIEditorUtils
             }
         }
 
-    End: return returnType;
+        End: return returnType;
     }
 
     internal static string GetExportType(string name, IniTool ini)
