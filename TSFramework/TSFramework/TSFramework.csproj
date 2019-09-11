@@ -112,6 +112,7 @@
     <Compile Include="UI\Base\UIPanel.cs" />
     <Compile Include="UI\Base\UIView.cs" />
     <Compile Include="UI\Element\UIButton.cs" />
+    <Compile Include="UI\Element\UIDropdown.cs" />
     <Compile Include="UI\Element\UIImage.cs" />
     <Compile Include="UI\Element\UIInputField.cs" />
     <Compile Include="UI\Element\UIScrollbar.cs" />

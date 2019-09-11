@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 namespace TSFrame.UI
 {
+    public delegate void OnIntValueChanged(int value);
     public delegate void OnFloatValueChanged(float value);
     public delegate void OnStringValueChanged(string value);
     public delegate void OnBoolValueChanged(bool value);
@@ -42,6 +43,8 @@ namespace TSFrame.UI
                     return new UISlider(uIView, slider) as T;
                 case Scrollbar scrollbar:
                     return new UIScrollbar(uIView, scrollbar) as T;
+                case Dropdown dropdown:
+                    return new UIDropdown(uIView, dropdown) as T;
                 default:
                     break;
             }
