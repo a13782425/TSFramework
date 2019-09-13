@@ -309,8 +309,6 @@ namespace TSFrame.UI
         /// </summary>
         private Dictionary<EventTriggerType, UIEventBase> _eventDic = null;
 
-        
-
         /// <summary>
         /// 拖动开始事件
         /// </summary>
