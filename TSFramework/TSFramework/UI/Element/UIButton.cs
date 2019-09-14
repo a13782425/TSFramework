@@ -40,6 +40,10 @@ namespace TSFrame.UI
         /// 双击事件
         /// </summary>
         public event Action<GameObject> onDoubleClick { add { AddDoubleClick(value); } remove { RemoveDoubleClick(value); } }
+        /// <summary>
+        /// 双击事件
+        /// </summary>
+        public event Action<GameObject> onRightClick;
         private void AddDoubleClick(Action<GameObject> value)
         {
             _onDoubleClick += value;
@@ -98,26 +102,33 @@ namespace TSFrame.UI
                 _doubleClickCoroutine = null;
             }
         }
-        private void tempOnClick(UnityEngine.EventSystems.PointerEventData obj)
+        private void tempOnClick(UnityEngine.EventSystems.PointerEventData eventData)
         {
-            if (_doubleClickCoroutine == null)
+            if (eventData.button == UnityEngine.EventSystems.PointerEventData.InputButton.Right)
             {
-                OnClick?.Invoke();
-                OnClickWithObj?.Invoke(gameObject);
+                onRightClick?.Invoke(gameObject);
             }
-            else
+            else if (eventData.button == UnityEngine.EventSystems.PointerEventData.InputButton.Left)
             {
-                //存在双击
-                if (_isFirstClick)
+                if (_doubleClickCoroutine == null)
                 {
-                    _onDoubleClick?.Invoke(gameObject);
-                    _isFirstClick = false;
-                    _tempTime = 0;
+                    OnClick?.Invoke();
+                    OnClickWithObj?.Invoke(gameObject);
                 }
                 else
                 {
-                    _isFirstClick = true;
-                    _tempTime = 0;
+                    //存在双击
+                    if (_isFirstClick)
+                    {
+                        _onDoubleClick?.Invoke(gameObject);
+                        _isFirstClick = false;
+                        _tempTime = 0;
+                    }
+                    else
+                    {
+                        _isFirstClick = true;
+                        _tempTime = 0;
+                    }
                 }
             }
         }
