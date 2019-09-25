@@ -577,12 +577,12 @@ namespace TSFrame.MVVM
             /// </summary>
             public void SetLastValue()
             {
-                if (_isChange)
-                {
-                    _isChange = false;
-                    SetValue(BindingMode.OneWayToSource, _lastValue);
-                    SetValue(BindingMode.TwoWay, _lastValue);
-                }
+                //if (_isChange)
+                //{
+                //    _isChange = false;
+                //    SetValue(BindingMode.OneWayToSource, _lastValue);
+                //    SetValue(BindingMode.TwoWay, _lastValue);
+                //}
             }
             /// <summary>
             /// 设置Value

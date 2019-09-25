@@ -22,30 +22,6 @@ namespace TSFrame.UI
 
         }
         /// <summary>
-        /// 添加Item
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T AddSubItem<T>() where T : UIItem, new()
-        {
-            return AddSubItem<T>(null);
-        }
-
-        /// <summary>
-        /// 添加Item
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="parent">默认父亲</param>
-        /// <returns></returns>
-        public T AddSubItem<T>(Transform parent) where T : UIItem, new()
-        {
-            T t = UIView.CreateView<T>(parent);
-            t.BelongPanel = this;
-            BindingElement(t);
-            return t;
-        }
-
-        /// <summary>
         /// 设置层级
         /// </summary>
         /// <param name="uILayer"></param>

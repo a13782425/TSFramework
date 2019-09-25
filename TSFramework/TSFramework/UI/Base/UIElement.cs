@@ -68,21 +68,22 @@ namespace TSFrame.UI
         /// </summary>
         public bool active
         {
-            get => gameObject.activeInHierarchy;
+            get => gameObject.activeSelf;
             set
             {
                 bool b = active;
-                gameObject.SetActive(value);
                 if (b != value)
                 {
                     if (value)
                     {
+                        gameObject.SetActive(value);
                         Internal_OnEnable();
                         //OnEnable();
                     }
                     else
                     {
                         Internal_OnDisable();
+                        gameObject.SetActive(value);
                         //OnDisable();
                     }
                 }

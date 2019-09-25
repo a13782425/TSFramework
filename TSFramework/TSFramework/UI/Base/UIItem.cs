@@ -10,15 +10,15 @@ namespace TSFrame.UI
 {
     public abstract class UIItem : UIView
     {
-        private UIPanel _belongPanel = null;
-        public UIPanel BelongPanel { get => _belongPanel; internal set => _belongPanel = value; }
+        private UIView _belongView = null;
+        public UIView BelongView { get => _belongView; internal set => _belongView = value; }
         protected UIItem() : base()
         {
         }
 
         protected override void OnDestroy()
         {
-            BelongPanel?.RemoveElement(this);
+            BelongView?.RemoveElement(this);
             base.OnDestroy();
         }
     }

@@ -244,6 +244,27 @@ namespace TSFrame.Module
             _panelList.Clear();
             Object.Destroy(this.gameObject);
         }
-
+        /// <summary>
+        /// 判断某个类型的Panel是否已经被打开
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool IsOpen<T>() where T : UIPanel, new()
+        {
+            UIPanel panel = null;
+            foreach (var item in _panelList)
+            {
+                if (item is T)
+                {
+                    panel = item;
+                    break;
+                }
+            }
+            if (panel == null)
+            {
+                return false;
+            }
+            return panel.active;
+        }
     }
 }

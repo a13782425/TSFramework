@@ -32,6 +32,13 @@ namespace TSFrame.Module
         T GetPanel<T>() where T : UIPanel, new();
 
         /// <summary>
+        /// 判断某个类型的Panel是否已经被打开
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        bool IsOpen<T>() where T : UIPanel, new();
+
+        /// <summary>
         /// 隐藏一个Panel
         /// </summary>
         /// <param name="uIPanel"></param>

@@ -50,6 +50,30 @@ namespace TSFrame
 
         public GameObject gameObject { get; private set; }
         public Transform transform { get; private set; }
+        private bool _isUseGc = false;
+        private float _gcTime = 180;
+        private float _gcTempTime = 0;
+        /// <summary>
+        /// 是否使用GC 
+        /// </summary>
+        /// <param name="isUse"></param>
+        /// <returns></returns>
+        public GameApp UseGC(bool isUse)
+        {
+            _isUseGc = isUse;
+            _gcTempTime = 0;
+            return this;
+        }
+        /// <summary>
+        /// 设置GC时间
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        public GameApp SetGCTime(float seconds)
+        {
+            _gcTime = seconds;
+            return this;
+        }
         void OnUpdate()
         {
             if (_moduleDtos != null)
@@ -58,6 +82,15 @@ namespace TSFrame
                 {
                     item.Module.Update(deltaTime);
                 }
+            }
+            if (_isUseGc)
+            {
+                if (_gcTempTime >_gcTime)
+                {
+                    System.GC.Collect();
+                    _gcTempTime = 0;
+                }
+                _gcTempTime += deltaTime;
             }
         }
         void Freed()
