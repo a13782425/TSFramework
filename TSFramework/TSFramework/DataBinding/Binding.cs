@@ -611,7 +611,11 @@ namespace TSFrame.MVVM
             /// </summary>
             internal void Reset()
             {
-                BindingElement.ValueChanged -= BindingElement_ValueChanged;
+                if (BindingElement != null)
+                {
+                    BindingElement.ValueChanged -= BindingElement_ValueChanged;
+                }
+                BindingElement = null;
             }
             internal void Unbind(string propName, BindingMode bindingMode)
             {

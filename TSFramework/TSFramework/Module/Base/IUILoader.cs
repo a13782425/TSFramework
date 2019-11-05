@@ -32,6 +32,18 @@ namespace TSFrame.Module
         T GetPanel<T>() where T : UIPanel, new();
 
         /// <summary>
+        /// 获得全部T类型
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        List<T> GetAllPanel<T>() where T : UIPanel, new();
+        /// <summary>
+        /// 获得全部窗口
+        /// </summary>
+        /// <returns></returns>
+        List<UIPanel> GetAllPanel();
+
+        /// <summary>
         /// 判断某个类型的Panel是否已经被打开
         /// </summary>
         /// <typeparam name="T"></typeparam>

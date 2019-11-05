@@ -23,19 +23,28 @@ namespace TSFrame.UI
 
         public void SetValue(object value)
         {
+            Color color = Element.color;
             if (value == null)
             {
                 GameApp.Instance.LogError("需要设置的精灵为Null===" + Element.name);
                 sprite = null;
+                color.a = 0;
+                Element.color = color;
                 return;
+            }
+            else
+            {
+                color.a = 1;
             }
             switch (value)
             {
                 case Sprite sp:
                     sprite = sp;
+                    Element.color = color;
                     break;
                 case string str:
                     sprite = GameApp.Instance.ResourcesLoader.Load<Sprite>(str);
+                    Element.color = color;
                     break;
                 case float f:
                     fillAmount = f;
@@ -48,6 +57,12 @@ namespace TSFrame.UI
                     sprite = null;
                     break;
             }
+        }
+
+        internal override void Internal_OnDestroy()
+        {
+            sprite = null;
+            base.Internal_OnDestroy();
         }
 
 

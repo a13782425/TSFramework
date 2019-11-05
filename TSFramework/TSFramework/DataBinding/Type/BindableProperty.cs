@@ -74,6 +74,16 @@ namespace TSFrame.MVVM
         }
 
         /// <summary>
+        /// 发布
+        /// </summary>
+        /// <returns></returns>
+        public BindableProperty<T> Publish()
+        {
+            ValueChanged(_value, _value);
+            return this;
+        }
+
+        /// <summary>
         /// 订阅
         /// </summary>
         /// <param name="action">Action(先前的值，现在的值)</param>

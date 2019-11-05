@@ -33,6 +33,15 @@ namespace TSFrame.MVVM
             _list = new List<T>(array);
         }
 
+        /// <summary>
+        /// 索引器
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public T this[int index]
+        {
+            get { return _list[index]; }
+        }
         #endregion
 
         #region Method

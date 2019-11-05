@@ -43,7 +43,9 @@ namespace TSFrame.Module
             T resObj = Load<T>(path, autoRelease);
             if (resObj != null)
             {
-                return Object.Instantiate(resObj);
+                T obj = Object.Instantiate(resObj);
+                resObj = null;
+                return obj;
             }
             return null;
         }
@@ -58,7 +60,9 @@ namespace TSFrame.Module
             Object resObj = Load(path, autoRelease);
             if (resObj != null)
             {
-                return Object.Instantiate(resObj);
+                Object obj = Object.Instantiate(resObj);
+                resObj = null;
+                return obj;
             }
             return null;
         }
@@ -70,20 +74,21 @@ namespace TSFrame.Module
         /// <returns></returns>
         public T Load<T>(string path, bool autoRelease = true) where T : Object
         {
-            ResourcesDto resourcesDto;
-            if (!_resourcesCacheDic.ContainsKey(path))
-            {
-                Object resT = Resources.Load<T>(path);
-                resourcesDto = new ResourcesDto();
-                resourcesDto.ResourceObj = resT;
-                resourcesDto.AutoRelease = autoRelease;
-            }
-            else
-            {
-                resourcesDto = _resourcesCacheDic[path];
-            }
-            resourcesDto.LastUseTime = GameApp.Instance.gameTime;
-            return resourcesDto.ResourceObj as T;
+            return Resources.Load<T>(path);
+            //ResourcesDto resourcesDto;
+            //if (!_resourcesCacheDic.ContainsKey(path))
+            //{
+            //    Object resT = Resources.Load<T>(path);
+            //    resourcesDto = new ResourcesDto();
+            //    resourcesDto.ResourceObj = resT;
+            //    resourcesDto.AutoRelease = autoRelease;
+            //}
+            //else
+            //{
+            //    resourcesDto = _resourcesCacheDic[path];
+            //}
+            //resourcesDto.LastUseTime = GameApp.Instance.gameTime;
+            //return resourcesDto.ResourceObj as T;
         }
         /// <summary>
         /// 读取不创建
@@ -92,40 +97,40 @@ namespace TSFrame.Module
         /// <returns></returns>
         public Object Load(string path, bool autoRelease = true)
         {
-            ResourcesDto resourcesDto;
-            if (!_resourcesCacheDic.ContainsKey(path))
-            {
-                Object resT = Resources.Load(path);
-                resourcesDto = new ResourcesDto();
-                resourcesDto.ResourceObj = resT;
-                resourcesDto.AutoRelease = autoRelease;
-            }
-            else
-            {
-                resourcesDto = _resourcesCacheDic[path];
-            }
-            resourcesDto.LastUseTime = GameApp.Instance.gameTime;
-            return resourcesDto.ResourceObj;
+            return Resources.Load(path);
+            //ResourcesDto resourcesDto;
+            //if (!_resourcesCacheDic.ContainsKey(path))
+            //{
+            //    Object resT = Resources.Load(path);
+            //    resourcesDto = new ResourcesDto();
+            //    resourcesDto.ResourceObj = resT;
+            //    resourcesDto.AutoRelease = autoRelease;
+            //}
+            //else
+            //{
+            //    resourcesDto = _resourcesCacheDic[path];
+            //}
+            //resourcesDto.LastUseTime = GameApp.Instance.gameTime;
+            //return resourcesDto.ResourceObj;
         }
         public override void Update(float deltaTime)
         {
             if (_unloadTempTime > UnloadTime)
             {
-
-                foreach (var item in _resourcesCacheDic)
-                {
-                    if (item.Value.IsCanDestroy)
-                    {
-                        _destroyTempList.Add(item.Key);
-                    }
-                }
-                foreach (var item in _destroyTempList)
-                {
-                    ResourcesDto resourcesDto = _resourcesCacheDic[item];
-                    Object.Destroy(resourcesDto.ResourceObj);
-                    _resourcesCacheDic.Remove(item);
-                }
-                _destroyTempList.Clear();
+                //foreach (var item in _resourcesCacheDic)
+                //{
+                //    if (item.Value.IsCanDestroy)
+                //    {
+                //        _destroyTempList.Add(item.Key);
+                //    }
+                //}
+                //foreach (var item in _destroyTempList)
+                //{
+                //    ResourcesDto resourcesDto = _resourcesCacheDic[item];
+                //    Object.Destroy(resourcesDto.ResourceObj);
+                //    _resourcesCacheDic.Remove(item);
+                //}
+                //_destroyTempList.Clear();
                 //间隔一段时间调用
                 Resources.UnloadUnusedAssets();
                 _unloadTempTime = 0;

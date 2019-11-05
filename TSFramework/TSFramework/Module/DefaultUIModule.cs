@@ -266,5 +266,23 @@ namespace TSFrame.Module
             }
             return panel.active;
         }
+
+        public List<T> GetAllPanel<T>() where T : UIPanel, new()
+        {
+            List<T> tempList = new List<T>();
+            foreach (var item in _panelList)
+            {
+                if (item is T || item == null)
+                {
+                    tempList.Add(item as T);
+                }
+            }
+            return tempList;
+        }
+
+        public List<UIPanel> GetAllPanel()
+        {
+            return _panelList.ToList();
+        }
     }
 }
